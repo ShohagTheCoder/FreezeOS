@@ -30,10 +30,10 @@ void move_cursor()
     unsigned short position = cursor_row * SCREEN_WIDTH + cursor_col;
 
     outb(0x3d4, 14);
-    outb(0x3d5, position >> 0);
+    outb(0x3d5, (position >> 8) & 0xff);
 
     outb(0x3d4, 15);
-    outb(0x3d5, position);
+    outb(0x3d5, position & 0xff);
 }
 
 /**
@@ -68,7 +68,7 @@ void putchar(char c)
 /**
  * Print string function
  */
-void print_string(const char *str)
+void prints(const char *str)
 {
     while (*str)
     {
@@ -89,4 +89,8 @@ void clear_screen()
         video_memory[i * 2] = ' ';      // Character: space
         video_memory[i * 2 + 1] = 0x0F; // Attribute: white on black
     }
+
+    cursor_col = 0;
+    cursor_row = 0;
+    move_cursor();
 }

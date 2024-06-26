@@ -30,7 +30,7 @@ BUILD_OBJ_FILES		:= $(shell find $(BUILD_DIR) -name '*.o')
 ASM					:= nasm
 CC					:= i686-linux-gnu-gcc
 LD					:= i686-linux-gnu-ld
-QEMU				:= qemu-system-x86_64
+QEMU				:= qemu-system-i386
 DD 					:= dd
 
 KERNEL_C_FILES		:= $(shell find $(SRC_KERNEL_DIR) -name '*.c')
@@ -38,17 +38,17 @@ KERNEL_OBJ_FILES	:= $(patsubst $(SRC_KERNEL_DIR)/%.c, $(BUILD_KERNEL_DIR)/%.o, $
 
 # Compilation flags
 ASMFLAGS			:= -f bin
-CFLAGS				:= -ffreestanding -fno-pie -nostdlib
+CFLAGS				:= -ffreestanding -Wall -g -nostdlib
 
 # All rules
-.PHONY : all clean create-iso run
+.PHONY : all clean run debug
 
-all : $(ISO_FILE) run
-
-create-iso : 
-	$(DD) if=/dev/zero of=$(ISO_FILE) bs=512 count=2880
+all : clean $(ISO_FILE) run
+now : $(ISO_FILE) run
 
 $(ISO_FILE): $(BOOTLOADER_BIN) $(KERNEL_BIN)
+	@mkdir -p $(@D)
+	$(DD) if=/dev/zero of=$(ISO_FILE) bs=512 count=2880
 	$(DD) if=$(BOOTLOADER_BIN) of=$@ bs=512 seek=0 conv=notrunc
 	$(DD) if=$(KERNEL_BIN) of=$@ bs=512 seek=1 conv=notrunc
 
@@ -62,10 +62,15 @@ $(BUILD_KERNEL_DIR)/%.o : $(SRC_KERNEL_DIR)/%.c
 
 	
 $(BOOTLOADER_BIN) : $(BOOTLOADER_ASM)
+	@mkdir -p $(@D)
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 run : 
 	$(QEMU) -drive format=raw,file=$(ISO_FILE)
 
 clean:
-	rm $(BUILD_BIN_FILES) $(BUILD_OBJ_FILES)
+	rm -rf $(BUILD_DIR)/*
+	clear
+
+debug: 
+	$(QEMU) -s -S -kernel $(ISO_FILE)

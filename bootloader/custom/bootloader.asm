@@ -3,18 +3,9 @@
 
 ; Variables
 kernel_location equ 0x1000
-; boot_disk: db 0
-; mov [boot_disk], dl
-
-; Messages
-hello_world db 'Hello world! Go', 0x0d, 0x0a, 0
 
 ; Starting point
 start:
-	; Print hello word
-	mov si, hello_world
-	call print_string
-
     ; Load the kernel
     call load_the_kernel
 
@@ -38,29 +29,6 @@ load_the_kernel:
 	; Call read from disk
 	call read_from_disk
 	ret
-
-; Print once
-print_once:
-    mov ah, 0x0e
-	lodsb
-	int 0x10
-	ret
- 
-; Print pring
-print_string:
-    mov ah, 0x0e
-
-.start_printing:
-    lodsb
-    cmp al, 0
-    je .print_done
-    int 0x10
-    jmp .start_printing
-
-; Work has done go back
-.print_done:
-	xor si, si
-    ret
 
 ; GDT descriptor
 GDT_start:
@@ -103,23 +71,28 @@ go_to_protected_mode:
 	jmp CODE_SEG:start_protected_mode
 
 [BITS 32]
-; Starting point of protected mode
+
+; Start of protected mode code
 start_protected_mode:
-	;Set up segment registers
-	mov ax, DATA_SEG
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ss, ax
-	mov esp, 0x90000
+    ; Set up segment registers with the data segment selector
+    mov ax, DATA_SEG     ; Load the data segment selector into AX
+    mov ds, ax           ; Set DS to the data segment
+    mov es, ax           ; Set ES to the data segment
+    mov fs, ax           ; Set FS to the data segment
+    mov gs, ax           ; Set GS to the data segment
+    mov ss, ax           ; Set SS to the data segment
 
-	; Jump to start
-	jmp 0x1000
+    ; Initialize the stack pointer
+    mov esp, 0x7c00      ; Set ESP to the start of the stack (top of memory)
 
+    ; Jump to the kernel's starting location
+    call kernel_location ; Call the kernel's entry point
+
+; Infinite loop to hang the system
 hang:
-	hlt
-	jmp hang
+    hlt                 ; Halt the CPU
+    jmp hang            ; Jump to the hang label, creating an infinite loop
+
 
 ; Bootloader healpers
 times 510-($-$$) db 0   ; Fill the rest of the boot sector with zeros
