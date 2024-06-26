@@ -1,73 +1,71 @@
-# Variables
-SRC				:= src
-DIST			:= dist
-BUILD			:= build
-QEMU			:= qemu-system-x86_64
-CROSS_COMPILE 	:= i686-linux-gnu-
-GCC 			:= $(CROSS_COMPILE)gcc
-LD 				:= $(CROSS_COMPILE)ld
-EDITOR			:= micro
-ISO				:= $(BUILD)/freeze.img
-ASM				:= nasm
+BUILD_DIR			:= build
+SRC_KERNEL_DIR		:= kernel
+SRC_BOOT_DIR		:= bootloader/custom
 
-# Files
-KERNEL_OBJ		:= $(DIST)/kernel/kernel.o
-KERNEL_C		:= $(SRC)/kernel/kernel.c
-KERNEL_BIN		:= $(DIST)/kernel/kernel.bin
+ISO_DIR				:= $(BUILD_DIR)/iso
+ISO_FILE			:= $(ISO_DIR)/freeze.img
 
-BOOTLOADER_BIN	:= $(DIST)/bootloader/bootloader.bin
-BOOTLOADER_ASM	:= $(SRC)/bootloader/bootloader.asm
+BUILD_BOOT_DIR		:= $(BUILD_DIR)/bootloader
+BUILD_KERNEL_DIR	:= $(BUILD_DIR)/kernel
 
-SCREEN_OBJ		:= $(DIST)/kernel/functions/screen.o
-SRCEEN_C		:= $(SRC)/kernel/functions/screen.c
+# Source files
+BOOTLOADER_ASM		:= $(SRC_BOOT_DIR)/bootloader.asm
+X86_START_ASM		:= $(SRC_KERNEL_DIR)/arch/x86/start.asm
+KERNEL_C			:= $(SRC_KERNEL_DIR)/kernel.c
+LD_FILE				:= configs/kernel/linker.ld
+
+# Object files
+BOOTLOADER_OBJ		:= $(BUILD_BOOT_DIR)/bootloader.o
+X86_START_OBJ		:= $(BUILD_KERNEL_DIR)/start.o
+KERNEL_OBJ			:= $(BUILD_KERNEL_DIR)/kernel.o
+
+# Binary files
+BOOTLOADER_BIN		:= $(BUILD_BOOT_DIR)/bootlaoder.bin
+KERNEL_BIN			:= $(BUILD_KERNEL_DIR)/kernel.bin
+
+BUILD_BIN_FILES		:= $(shell find $(BUILD_DIR) -name '*.bin')
+BUILD_OBJ_FILES		:= $(shell find $(BUILD_DIR) -name '*.o')
+
+# Toolchain
+ASM					:= nasm
+CC					:= i686-linux-gnu-gcc
+LD					:= i686-linux-gnu-ld
+QEMU				:= qemu-system-x86_64
+DD 					:= dd
+
+KERNEL_C_FILES		:= $(shell find $(SRC_KERNEL_DIR) -name '*.c')
+KERNEL_OBJ_FILES	:= $(patsubst $(SRC_KERNEL_DIR)/%.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
+
+# Compilation flags
+ASMFLAGS			:= -f bin
+CFLAGS				:= -ffreestanding -fno-pie -nostdlib
 
 # All rules
-all: clean build-boot compile-kernel compile-functions link-kernel-with-functions build-img run
+.PHONY : all clean create-iso run
 
-# Only kernel
-kernel: clean build-boot compile-kernel link-kernel build-img run
+all : $(ISO_FILE) run
 
-# Rules
-build-boot: $(BOOTLOADER_ASM)
-	$(ASM) -f bin $(BOOTLOADER_ASM) -o $(BOOTLOADER_BIN)
+create-iso : 
+	$(DD) if=/dev/zero of=$(ISO_FILE) bs=512 count=2880
 
-# Build the image file if not exist
-create-img:
-	dd if=/dev/zero of=$(ISO) bs=512 count=2880;
+$(ISO_FILE): $(BOOTLOADER_BIN) $(KERNEL_BIN)
+	$(DD) if=$(BOOTLOADER_BIN) of=$@ bs=512 seek=0 conv=notrunc
+	$(DD) if=$(KERNEL_BIN) of=$@ bs=512 seek=1 conv=notrunc
 
-# Copy data from bootloader.bin to freeze.img
-build-img: $(BOOTLOADER_BIN)
-	dd if=$(BOOTLOADER_BIN) of=$(ISO) conv=notrunc
-	dd if=$(KERNEL_BIN) of=$(ISO) bs=512 seek=1 conv=notrunc
 
-run: $(ISO)
-	$(QEMU) -drive format=raw,file=$(ISO)
-
-# Edit the bootlaoder
-edit: $(BOOTLOADER_ASM)
-	$(EDITOR) $(BOOTLOADER_ASM)
-
-# Edit the make file
-make:
-	$(EDITOR) Makefile
-
-compile-kernel: $(KERNEL_C)
-	$(GCC) -ffreestanding -fno-pie -nostdlib -c $(KERNEL_C) -o $(KERNEL_OBJ) 
-
-compile-functions:
-	$(GCC) -ffreestanding -fno-pie -nostdlib  -c $(SRCEEN_C) -o $(SCREEN_OBJ)
-
-# Linkt the kernel
-link-kernel: $(KERNEL_OBJ)
-	$(LD) -T linker.ld -o $(KERNEL_BIN) $(KERNEL_OBJ)
-
-# Linkt the kernel
-link-kernel-with-functions: $(KERNEL_OBJ)
-	$(LD) -T linker.ld -o $(KERNEL_BIN) $(KERNEL_OBJ) $(SCREEN_OBJ)
-
-# Clear kernel
-clean:
-	rm -f $(KERNEL_BIN) $(KERNEL_OBJ) $(BOOTLOADER_BIN) $(SCREEN_OBJ)
+$(KERNEL_BIN) : $(KERNEL_OBJ_FILES)
+	$(LD) -T $(LD_FILE) -o $@ $(KERNEL_OBJ_FILES)
 	
-format:
-	clang-format -style=file -i kernel/
+$(BUILD_KERNEL_DIR)/%.o : $(SRC_KERNEL_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+	
+$(BOOTLOADER_BIN) : $(BOOTLOADER_ASM)
+	$(ASM) $(ASMFLAGS) $< -o $@
+
+run : 
+	$(QEMU) -drive format=raw,file=$(ISO_FILE)
+
+clean:
+	rm $(BUILD_BIN_FILES) $(BUILD_OBJ_FILES)

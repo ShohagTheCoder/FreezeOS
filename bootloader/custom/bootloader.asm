@@ -106,14 +106,20 @@ go_to_protected_mode:
 ; Starting point of protected mode
 start_protected_mode:
 	;Set up segment registers
-	mov ax, 0x10
+	mov ax, DATA_SEG
 	mov ds, ax
 	mov es, ax
+	mov fs, ax
+	mov gs, ax
 	mov ss, ax
-	mov sp, 0x7c00 		; Set stack pointer
+	mov esp, 0x90000
 
-	; Jump to kernel
-	jmp kernel_location
+	; Jump to start
+	jmp 0x1000
+
+hang:
+	hlt
+	jmp hang
 
 ; Bootloader healpers
 times 510-($-$$) db 0   ; Fill the rest of the boot sector with zeros
