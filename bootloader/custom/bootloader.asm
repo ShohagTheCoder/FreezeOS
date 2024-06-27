@@ -86,7 +86,7 @@ start_protected_mode:
     mov esp, 0x7c00      ; Set ESP to the start of the stack (top of memory)
 
     ; Jump to the kernel's starting location
-    call kernel_location ; Call the kernel's entry point
+    jmp kernel_location ; Call the kernel's entry point
 
 ; Infinite loop to hang the system
 hang:

@@ -28,8 +28,8 @@ BUILD_OBJ_FILES		:= $(shell find $(BUILD_DIR) -name '*.o')
 
 # Toolchain
 ASM					:= nasm
-CC					:= i686-linux-gnu-gcc
-LD					:= i686-linux-gnu-ld
+CC					:= gcc
+LD					:= ld
 QEMU				:= qemu-system-i386
 DD 					:= dd
 
@@ -38,7 +38,7 @@ KERNEL_OBJ_FILES	:= $(patsubst $(SRC_KERNEL_DIR)/%.c, $(BUILD_KERNEL_DIR)/%.o, $
 
 # Compilation flags
 ASMFLAGS			:= -f bin
-CFLAGS				:= -ffreestanding -Wall -g -nostdlib
+CFLAGS				:= -ffreestanding -Wall -g -nostdlib -m32
 
 # All rules
 .PHONY : all clean run debug
@@ -54,7 +54,7 @@ $(ISO_FILE): $(BOOTLOADER_BIN) $(KERNEL_BIN)
 
 
 $(KERNEL_BIN) : $(KERNEL_OBJ_FILES)
-	$(LD) -T $(LD_FILE) -o $@ $(KERNEL_OBJ_FILES)
+	$(LD) -T $(LD_FILE) -m elf_i386 -o $@ $(KERNEL_OBJ_FILES)
 	
 $(BUILD_KERNEL_DIR)/%.o : $(SRC_KERNEL_DIR)/%.c
 	@mkdir -p $(@D)
