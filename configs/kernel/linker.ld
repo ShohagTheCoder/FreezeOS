@@ -1,7 +1,7 @@
 ENTRY(main)
 SECTIONS
 {
-    . = 0x100000; /* Load the kernel at 4KB */
+    . = 0x1000; /* Load the kernel at 4KB */
     .text :
     {
         *(.text)

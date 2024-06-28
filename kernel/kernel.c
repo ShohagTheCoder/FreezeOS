@@ -1,15 +1,17 @@
 #include "includes/drivers/console.h"
-// #include "includes/lib/string.h"
+#include "includes/lib/string.h"
 
-// Main entry point
+// kernel.c
 void main()
 {
     // Clear the screen
     clear_screen();
 
-    const char *str = "Hello Shohag Ahmed! ";
+    const char *str = "Hello Shohag Ahmed!";
 
-    prints(str);
+    print_str(str);
+
+    print_int(strlen(str));
 
     while (1)
     {

@@ -1,5 +1,5 @@
 [BITS 16]
-[ORG 0x7C00]
+[org 0x7c00]
 
 ; Variables
 kernel_location equ 0x1000
@@ -83,7 +83,8 @@ start_protected_mode:
     mov ss, ax           ; Set SS to the data segment
 
     ; Initialize the stack pointer
-    mov esp, 0x7c00      ; Set ESP to the start of the stack (top of memory)
+    mov ebp, 0xffff  	 ; Set EBP to the base of the stack (top of memory) 
+	mov esp, ebp  		 ; Set ESP to the start of the stack (top of memory)
 
     ; Jump to the kernel's starting location
     jmp kernel_location ; Call the kernel's entry point

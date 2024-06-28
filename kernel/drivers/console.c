@@ -1,9 +1,8 @@
-// Define fixed-width integer types if stdint.h is not available
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long uint64_t;
+#include "../includes/drivers/console.h"
+#include "../../includes/types/types.h"
+#include "../includes/lib/string.h"
 
+// Define fixed-width integer types if stdint.h is not available
 #define VGA_MEMORY_ADDRESS 0xb8000
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
@@ -63,17 +62,6 @@ void putchar(char c)
     }
 
     move_cursor();
-}
-
-/**
- * Print string function
- */
-void prints(const char *str)
-{
-    while (*str)
-    {
-        putchar(*str++);
-    }
 }
 
 // Function to clear the screen in VGA text mode
