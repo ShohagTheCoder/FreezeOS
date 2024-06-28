@@ -82,3 +82,22 @@ void clear_screen()
     cursor_row = 0;
     move_cursor();
 }
+
+// // somethis went wrong
+// void reverse_str(char str[])
+// {
+//     int len = 0;
+
+//     while (str[len] != '\0' && len < 99)
+//     {
+//         len++;
+//     }
+
+//     // Swap charaters from start to end
+//     for (int i = 0; i < len / 2; i++)
+//     {
+//         char temp = str[i];
+//         str[i] = str[len - i - 1];
+//         str[len - i - 1] = temp;
+//     }
+// }

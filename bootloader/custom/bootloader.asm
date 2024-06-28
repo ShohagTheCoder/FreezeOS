@@ -24,7 +24,7 @@ read_from_disk:
 load_the_kernel:
 	mov bx, kernel_location		; Where to load the data
 	mov cl, 2 					; Sector number to read (destination)
-	mov al, 10					; Numbers of sector to read
+	mov al, 40					; Numbers of sector to read
 
 	; Call read from disk
 	call read_from_disk
