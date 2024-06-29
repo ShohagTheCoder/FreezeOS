@@ -1,10 +1,18 @@
 #include "../includes/lib/string.h"
 #include "../includes/drivers/console.h"
 
-// Get string len
-size_t strlen(const char *str)
+/**
+ * @brief Counts the number of character in the string.
+ *
+ * This function take a string pointer and count ther length by looping the
+ * string.
+ *
+ * @param str The pointer which locate the string starting position.
+ * @return The lenght of the string a
+ */
+int strlen(char *str)
 {
-    size_t len = 0;
+    int len = 0;
     while (str[len] != '\0')
     {
         len++;
@@ -16,69 +24,32 @@ size_t strlen(const char *str)
 // Function to convert an integer to its ASCII representation
 void int_to_ascii(int n, char str[])
 {
-    int is_negative = 0;
+    // Counts of the digits
+    int counts = count_digits(n);
 
     // Handle negative numbers
     if (n < 0)
     {
-        is_negative = 1;
         n = -n;
-    }
-
-    int len = count_digits(n);
-
-    str[len] = '\0'; // Null-terminate the string
-
-    // Add negative sign if the number was negative
-    if (is_negative)
-
-    {
         str[0] = '-';
-        len++;
+        counts++;
     }
 
-    // Generate digits in reverse order
+    // Set null terminate to the end of string
+    str[counts] = '\0';
+
+    // Generate digits
     do
     {
-        str[--len] = n % 10 + '0'; // Convert each digit to ASCII
+        str[--counts] = n % 10 + '0'; // Convert each digit to ASCII
         n /= 10;
     } while (n > 0);
 }
 
-// void int_to_ascii(int n, char str[])
-// {
-//     int i = 0;
-//     int is_negative = 0;
-
-//     // Handle negative numbers
-//     if (n < 0)
-//     {
-//         is_negative = 1;
-//         n = -n;
-//     }
-
-//     int len = strlen(str);
-
-//     // Generate digits in reverse order
-//     do
-//     {
-//         str[i++] = n % 10 + '0'; // Convert each digit to ASCII
-//         n /= 10;
-//     } while (n > 0);
-
-//     // Add negative sign if the number was negative
-//     if (is_negative)
-//     {
-//         str[i++] = '-';
-//     }
-
-//     str[i] = '\0'; // Null-terminate the string
-// }
-
 /**
  * Print string function
  */
-void print_str(const char *str)
+void print_str(char *str)
 {
     while (*str)
     {
@@ -89,14 +60,16 @@ void print_str(const char *str)
 // Example implementation of print_int assuming screen output functions exist
 void print_int(int n)
 {
-    char str[20]; // Assuming a maximum of 20 digits for the number
+    // Create a empty array with length equal to the counts of the number to
+    // hold the returen string
+    char str[count_digits(n)];
     int_to_ascii(n, str);
 
     // Assuming you have a function to print strings to the screen
     print_str(str); // Replace with your screen output function
 }
 
-void reverse_str(char str[])
+void reverse_str(char *str)
 {
     int len = strlen(str);
 

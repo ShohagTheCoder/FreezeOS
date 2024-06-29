@@ -74,17 +74,27 @@ go_to_protected_mode:
 
 ; Start of protected mode code
 start_protected_mode:
+
+section .data
+	stack_segment_selector equ 0x10
+	stack_size equ 4096
+
+section .bss 
+	stack_space resb stack_size
+
+section .text
+	global _start
+
+_start:
+
     ; Set up segment registers with the data segment selector
     mov ax, DATA_SEG     ; Load the data segment selector into AX
     mov ds, ax           ; Set DS to the data segment
-    mov es, ax           ; Set ES to the data segment
-    mov fs, ax           ; Set FS to the data segment
-    mov gs, ax           ; Set GS to the data segment
-    mov ss, ax           ; Set SS to the data segment
 
-    ; Initialize the stack pointer
-    mov ebp, 0xffff  	 ; Set EBP to the base of the stack (top of memory) 
-	mov esp, ebp  		 ; Set ESP to the start of the stack (top of memory)
+	mov ax, stack_segment_selector
+	mov ss, ax
+
+	mov esp, stack_space + stack_size
 
     ; Jump to the kernel's starting location
     jmp kernel_location ; Call the kernel's entry point
@@ -94,7 +104,27 @@ hang:
     hlt                 ; Halt the CPU
     jmp hang            ; Jump to the hang label, creating an infinite loop
 
+; start_protected_mode:
+;     ; Set up segment registers with the data segment selector
+;     mov ax, DATA_SEG     ; Load the data segment selector into AX
+;     mov ds, ax           ; Set DS to the data segment
+;     mov es, ax           ; Set ES to the data segment
+;     mov fs, ax           ; Set FS to the data segment
+;     mov gs, ax           ; Set GS to the data segment
+;     mov ss, ax           ; Set SS to the data segment
 
-; Bootloader healpers
+;     ; Initialize the stack pointer
+;     mov ebp, 0xffff  	 ; Set EBP to the base of the stack (top of memory) 
+; 	mov esp, ebp  		 ; Set ESP to the start of the stack (top of memory)
+
+;     ; Jump to the kernel's starting location
+;     jmp kernel_location ; Call the kernel's entry point
+
+; ; Infinite loop to hang the system
+; hang:
+;     hlt                 ; Halt the CPU
+;     jmp hang            ; Jump to the hang label, creating an infinite loop
+
+; Bootloader healper and signature
 times 510-($-$$) db 0   ; Fill the rest of the boot sector with zeros
 dw 0xAA55               ; Boot signature

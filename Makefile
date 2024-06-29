@@ -33,7 +33,7 @@ LD					:= ld
 QEMU				:= qemu-system-i386
 DD 					:= dd
 
-KERNEL_C_FILES		:= $(SRC_KERNEL_DIR)/kernel.c $(SRC_KERNEL_DIR)/lib/string.c $(SRC_KERNEL_DIR)/drivers/console.c
+KERNEL_C_FILES		:= $(SRC_KERNEL_DIR)/kernel.c $(SRC_KERNEL_DIR)/lib/string.c $(SRC_KERNEL_DIR)/drivers/console.c $(SRC_KERNEL_DIR)/io.c
 KERNEL_OBJ_FILES	:= $(patsubst $(SRC_KERNEL_DIR)/%.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
 
 # Compilation flags
@@ -73,23 +73,3 @@ clean:
 
 debug: 
 	$(QEMU) -s -S -kernel $(ISO_FILE)
-
-	
-# $(ISO_FILE): $(BOOTLOADER_BIN) $(KERNEL_BIN)
-# 	@mkdir -p $(@D)
-# 	$(DD) if=/dev/zero of=$(ISO_FILE) bs=512 count=2880
-# 	$(DD) if=$(BOOTLOADER_BIN) of=$@ bs=512 seek=0 conv=notrunc
-# 	$(DD) if=$(KERNEL_BIN) of=$@ bs=512 seek=1 conv=notrunc
-
-
-# $(KERNEL_BIN) : $(KERNEL_OBJ_FILES)
-# 	$(LD) -T $(LD_FILE) -m elf_i386 -o $@ $(KERNEL_OBJ_FILES)
-	
-# $(BUILD_KERNEL_DIR)/%.o : $(SRC_KERNEL_DIR)/%.c
-# 	@mkdir -p $(@D)
-# 	$(CC) $(CFLAGS) -c $< -o $@
-
-	
-# $(BOOTLOADER_BIN) : $(BOOTLOADER_ASM)
-# 	@mkdir -p $(@D)
-# 	$(ASM) $(ASMFLAGS) $< -o $@
