@@ -18,7 +18,6 @@ struct idt_ptr
     size_t base;
 } __attribute__((packed));
 
-struct idt_entry idt[256];
-struct idt_ptr idtp;
+void init_idt();
 
 #endif

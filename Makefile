@@ -1,6 +1,6 @@
 BUILD_DIR			:= build
 SRC_KERNEL_DIR		:= kernel
-SRC_BOOT_DIR		:= bootloader/custom
+SRC_BOOT_DIR		:= bootloader
 
 ISO_DIR				:= $(BUILD_DIR)/iso
 ISO_FILE			:= $(ISO_DIR)/freeze.img
@@ -9,18 +9,18 @@ BUILD_BOOT_DIR		:= $(BUILD_DIR)/bootloader
 BUILD_KERNEL_DIR	:= $(BUILD_DIR)/kernel
 
 # Source files
-BOOTLOADER_ASM		:= $(SRC_BOOT_DIR)/bootloader.asm
+BOOTLOADER_ASM		:= $(SRC_BOOT_DIR)/boot.asm
 X86_START_ASM		:= $(SRC_KERNEL_DIR)/arch/x86/start.asm
 KERNEL_C			:= $(SRC_KERNEL_DIR)/kernel.c
 LD_FILE				:= configs/kernel/linker.ld
 
 # Object files
-BOOTLOADER_OBJ		:= $(BUILD_BOOT_DIR)/bootloader.o
+BOOTLOADER_OBJ		:= $(BUILD_BOOT_DIR)/boot.o
 X86_START_OBJ		:= $(BUILD_KERNEL_DIR)/start.o
 KERNEL_OBJ			:= $(BUILD_KERNEL_DIR)/kernel.o
 
 # Binary files
-BOOTLOADER_BIN		:= $(BUILD_BOOT_DIR)/bootlaoder.bin
+BOOTLOADER_BIN		:= $(BUILD_BOOT_DIR)/boot.bin
 KERNEL_BIN			:= $(BUILD_KERNEL_DIR)/kernel.bin
 
 BUILD_BIN_FILES		:= $(shell find $(BUILD_DIR) -name '*.bin')
@@ -33,12 +33,12 @@ LD					:= ld
 QEMU				:= qemu-system-i386
 DD 					:= dd
 
-KERNEL_C_FILES		:= $(SRC_KERNEL_DIR)/kernel.c $(SRC_KERNEL_DIR)/lib/string.c $(SRC_KERNEL_DIR)/drivers/console.c $(SRC_KERNEL_DIR)/io.c
+KERNEL_C_FILES		:= $(SRC_KERNEL_DIR)/kernel.c $(SRC_KERNEL_DIR)/drivers/keyboard.c $(SRC_KERNEL_DIR)/lib/string.c  $(SRC_KERNEL_DIR)/drivers/console.c $(SRC_KERNEL_DIR)/io.c
 KERNEL_OBJ_FILES	:= $(patsubst $(SRC_KERNEL_DIR)/%.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
 
 # Compilation flags
 ASMFLAGS			:= -f bin
-CFLAGS				:= -ffreestanding -Wall -g -nostdlib -m32
+CFLAGS				:= -ffreestanding -Wall -nostdlib -m32
 
 # All rules
 .PHONY : all clean run debug
