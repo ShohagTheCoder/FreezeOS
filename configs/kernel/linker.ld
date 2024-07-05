@@ -1,4 +1,4 @@
-ENTRY(main)
+ENTRY(kernel_entry)
 SECTIONS
 {
     . = 0x7e00; 

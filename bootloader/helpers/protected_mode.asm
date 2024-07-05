@@ -1,3 +1,4 @@
+; protected_mode.asm
 [BITS 32]
 ; Start of protected mode
 protected_mode:

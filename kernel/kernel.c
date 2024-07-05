@@ -15,7 +15,7 @@
 // } registers_t;
 
 // kernel.c
-void main()
+void kernel()
 {
     // Clear the screen
     clear_screen();
@@ -24,8 +24,8 @@ void main()
 
     // asm volatile("sti");
 
-    char *str = "Hello Shohag Ahmed!\n";
-    char *google = "GOOGLE\n";
+    char* str = "Hello Shohag Ahmed!\n";
+    char* google = "GOOGLE\n";
 
     print_str(str);
     print_int(-1234567890);

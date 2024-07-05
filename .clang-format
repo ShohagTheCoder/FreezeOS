@@ -1,7 +1,66 @@
 ---
-# Example .clang-format configuration
-BasedOnStyle: LLVM
+# Based on the Google coding style guide.
+BasedOnStyle: Google
+
+# Indentation settings
 IndentWidth: 4
+TabWidth: 4
 UseTab: Never
+
+# Column width
+ColumnLimit: 100
+
+# Alignments
+AlignAfterOpenBracket: Align
+AlignOperands: true
+AlignTrailingComments: true
+
+# Formatting options
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# Break settings
 BreakBeforeBraces: Allman
-...
+BreakConstructorInitializersBeforeComma: false
+BreakConstructorInitializers: BeforeColon
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+
+# Namespace indentation
+NamespaceIndentation: None
+
+# Pointer and reference binding
+DerivePointerAlignment: false
+PointerAlignment: Left
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: false
+
+# Include style
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: '^<.*\.h>'
+    Priority: 1
+  - Regex: '.*'
+    Priority: 2
+IncludeIsMainRegex: '(Test)?$'
+
+# Spaces around operators
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInContainerLiterals: true
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Comment formatting
+ReflowComments: true
+
+# Language-specific options
+Language: Cpp
+Standard: Cpp11
+
+# Custom macros
+MacroBlockBegin: '#ifdef'
+MacroBlockEnd: '#endif'

@@ -1,3 +1,4 @@
+; gdt.asm
 ; GDT descriptor
 GDT_start:
 	null_descriptor:
