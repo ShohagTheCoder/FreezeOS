@@ -1,5 +1,5 @@
-#include "../includes/lib/string.h"
-#include "../includes/drivers/console.h"
+#include "../includes/string.h"
+#include "../includes/console.h"
 
 /**
  * @brief Counts the number of character in the string.

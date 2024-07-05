@@ -1,7 +1,7 @@
-#include "../includes/drivers/console.h"
-#include "../../includes/types/types.h"
+#include "../includes/console.h"
 #include "../includes/io.h"
-#include "../includes/lib/string.h"
+#include "../includes/string.h"
+#include "../includes/types.h"
 
 // Define fixed-width integer types if stdint.h is not available
 #define VGA_MEMORY_ADDRESS 0xb8000

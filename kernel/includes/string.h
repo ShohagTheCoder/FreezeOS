@@ -1,7 +1,7 @@
 #ifndef STRING_H
 #define STRING_H
 
-#include "../../../includes/types/types.h"
+#include "types.h"
 
 void print_str(char *str);
 int strlen(char *str);

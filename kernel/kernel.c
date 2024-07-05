@@ -1,6 +1,6 @@
-#include "includes/drivers/console.h"
-#include "includes/drivers/keyboard.h"
-#include "includes/lib/string.h"
+#include "includes/console.h"
+#include "includes/keyboard.h"
+#include "includes/string.h"
 
 // typedef struct
 // {

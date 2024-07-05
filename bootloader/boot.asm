@@ -7,7 +7,7 @@ start:
     call load_the_kernel
 
 	; Prepare for protected mode
-    call go_to_protected_mode
+    call jmp_to_pm
 
 ; Load the kernel
 load_the_kernel:
@@ -18,32 +18,6 @@ load_the_kernel:
 	; Call read from disk
 	call read_disk
 	ret
-
-; Prepare for protected mode
-go_to_protected_mode:
-	cli
-
-	lgdt [GDT_descriptor]
-	mov eax, cr0
-	or eax, 1
-	mov cr0, eax	
-	
-	; Start protected mode
-	jmp CODE_SEG:start_protected_mode
-
-[BITS 32]
-
-start_protected_mode:
-    ; Set up segment registers with the data segment selector
-    mov ax, DATA_SEG     ; Load the data segment selector into AX
-    mov ds, ax           ; Set DS to the data segment
-    mov es, ax           ; Set ES to the data segment
-    mov fs, ax           ; Set FS to the data segment
-    mov gs, ax           ; Set GS to the data segment
-    mov ss, ax           ; Set SS to the data segment
-
-    ; Jump to the kernel's starting location
-    jmp kernel_location ; Call the kernel's entry point
 
 ; Variables
 kernel_location equ 0x7e00
@@ -56,6 +30,8 @@ hang:
 ; Include helper files
 %include "bootloader/helpers/read_disk.asm"
 %include "bootloader/helpers/gdt.asm"
+%include "bootloader/helpers/jmp_to_pm.asm"
+%include "bootloader/helpers/protected_mode.asm"
 
 ; Bootloader healper and signature
 times 510-($-$$) db 0   ; Fill the rest of the boot sector with zeros
