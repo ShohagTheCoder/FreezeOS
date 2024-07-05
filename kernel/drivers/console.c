@@ -41,6 +41,12 @@ void move_cursor()
     outb(VGA_DATA_PORT, position & 0xFF);
 }
 
+void cursor_back(int count)
+{
+    cursor_col -= count;
+    move_cursor();
+}
+
 /**
  * Put character on screen
  */
@@ -68,6 +74,11 @@ void putchar(char c)
 
     // Move the cursot to next position
     move_cursor();
+}
+
+void put_nl()
+{
+    putchar('\n');
 }
 
 // Function to clear the screen in VGA text mode

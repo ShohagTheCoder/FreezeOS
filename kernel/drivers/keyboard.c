@@ -2,6 +2,7 @@
 #include "../includes/console.h"
 #include "../includes/idt.h"
 #include "../includes/io.h"
+#include "../includes/shell.h"
 #include "../includes/string.h"
 
 #define KEYBOARD_DATA_PORT 0x60
@@ -55,7 +56,7 @@ void keyboard_handler()
         char c = scancode_to_char[scancode];
         if (c != 0)
         {
-            putchar(c);
+            shell(c);
         }
     }
 }

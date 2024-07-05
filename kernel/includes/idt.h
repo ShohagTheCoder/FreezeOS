@@ -23,6 +23,6 @@ typedef struct
 
 void mask_all_irqs();
 void unmask_irq(uint8_t irq_line);
-void init_idt();
+void idt_init();
 
 #endif

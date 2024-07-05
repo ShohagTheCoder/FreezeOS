@@ -9,20 +9,19 @@
  */
 void kernel()
 {
-    // Clear the screen
+    // Clear the screen and print welcome
     clear_screen();
+    print_str("--------------------------------------------------------------------------------");
+    print_str("Welcome to FreezeOS v1.0.3");
+    put_nl();
+    print_str("--------------------------------------------------------------------------------");
+    print_str("> ");
 
-    init_idt();
+    // Initialize interrupts
+    idt_init();
     mask_all_irqs();
+    keyboard_init();
     asm volatile("sti");
-
-    char* str = "Hello Shohag Ahmed!\n";
-    char* google = "GOOGLE\n";
-
-    print_str(str);
-    print_int(-1234567890);
-    reverse_str(google);
-    print_str(google);
 
     while (1)
     {

@@ -1,6 +1,6 @@
 # Variables
 BUILD_KERNEL_DIR	:= ../build/kernel
-KERNEL_C_FILES		:= kernel.c interrupts/idt.c drivers/keyboard.c libs/string.c  drivers/console.c io.c 
+KERNEL_C_FILES		:= kernel.c interrupts/idt.c drivers/keyboard.c libs/string.c drivers/console.c io.c shell/shell.c shell/commands.c
 KERNEL_OBJ_FILES	:= $(patsubst %.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
 KERNEL_ELF	 		:= $(BUILD_KERNEL_DIR)/kernel.elf
 KERNEL_BIN	 		:= $(BUILD_KERNEL_DIR)/kernel.bin

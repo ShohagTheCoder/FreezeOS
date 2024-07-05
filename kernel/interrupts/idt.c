@@ -19,7 +19,7 @@ extern void irq1_handler();
 void mask_all_irqs()
 {
     // Mask all IRQs on the master PIC
-    outb(PIC1_DATA, 0b11111101);
+    outb(PIC1_DATA, 0xFF);
     // Mask all IRQs on the slave PIC
     outb(PIC2_DATA, 0xFF);
 }
@@ -91,7 +91,7 @@ void set_idt_gates()
     set_idt_gate(33, (uint32_t)irq1_handler);
 }
 
-void init_idt()
+void idt_init()
 {
     // Call pic remap
     pic_remap();
