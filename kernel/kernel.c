@@ -1,6 +1,7 @@
 #include "includes/console.h"
 #include "includes/idt.h"
 #include "includes/keyboard.h"
+#include "includes/shell.h"
 #include "includes/string.h"
 
 /**
@@ -9,19 +10,14 @@
  */
 void kernel()
 {
-    // Clear the screen and print welcome
-    clear_screen();
-    print_str("--------------------------------------------------------------------------------");
-    print_str("Welcome to FreezeOS v1.0.3");
-    put_nl();
-    print_str("--------------------------------------------------------------------------------");
-    print_str("> ");
-
     // Initialize interrupts
     idt_init();
     mask_all_irqs();
     keyboard_init();
     asm volatile("sti");
+
+    // Initialize shell
+    shell_init();
 
     while (1)
     {

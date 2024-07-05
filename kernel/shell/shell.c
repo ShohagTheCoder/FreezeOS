@@ -4,6 +4,20 @@
 
 static char shell_buffer[256];
 
+void shell_init()
+{
+    // Clear the screen and print welcome
+    keyboard_bind(&shell);
+    clear_screen();
+    print_str("------------------------------------------------------------------------------");
+    put_nl();
+    print_str("Welcome to FreezeOS v1.0.3");
+    put_nl();
+    print_str("------------------------------------------------------------------------------");
+    put_nl();
+    print_str("> ");
+}
+
 void shell(char c)
 {
     if (c == '\b')

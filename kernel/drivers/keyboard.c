@@ -9,6 +9,8 @@
 #define KEYBOARD_STATUS_PORT 0x64
 #define KEYBOARD_IRQ 1
 
+static keyboardCallback g_callback = 0;
+
 // Lookup table for scancodes to ASCII characters
 static char scancode_to_char[128] = {
     0,    27,  '1', '2', '3',  '4', '5', '6', '7',  '8', /* 9 */
@@ -43,6 +45,14 @@ static char scancode_to_char[128] = {
     0,                                                   /* All other keys are undefined */
 };
 
+void keyboard_bind(keyboardCallback callback)
+{
+    if (callback)
+    {
+        g_callback = callback;
+    }
+}
+
 void keyboard_handler()
 {
     uint8_t scancode = inb(KEYBOARD_DATA_PORT);
@@ -56,7 +66,15 @@ void keyboard_handler()
         char c = scancode_to_char[scancode];
         if (c != 0)
         {
-            shell(c);
+            if (g_callback)
+            {
+                g_callback(c);
+            }
+            else
+            {
+                print_str("Keyboard has no binding to handle character.");
+                put_nl();
+            }
         }
     }
 }
