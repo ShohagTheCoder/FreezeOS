@@ -4,6 +4,7 @@ ISO_DIR				:= $(BUILD_DIR)/iso
 ISO_FILE			:= $(ISO_DIR)/freeze.img
 BOOTLOADER_BIN		:= $(BUILD_DIR)/bootloader/boot.bin
 KERNEL_BIN			:= $(BUILD_DIR)/kernel/kernel.bin
+KERNEL_ELF			:= $(BUILD_DIR)/kernel/kernel.elf
 
 
 # Rules
@@ -32,4 +33,4 @@ debug:
 	qemu-system-i386 -s -S -kernel $(ISO_FILE)
 
 gdb:
-	gdb -ex "target remote localhost:1234"
+	gdb  -ex "file $(KERNEL_ELF)" -ex "target remote localhost:1234" -ex "layout asm"

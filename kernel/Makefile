@@ -9,7 +9,7 @@ KERNEL_BIN	 		:= $(BUILD_KERNEL_DIR)/kernel.bin
 LD_FILE				:= ../configs/kernel/linker.ld
 
 # Flags
-CFLAGS				:= -ffreestanding -Wall -nostdlib -m32
+CFLAGS				:= -ffreestanding -Wall -nostdlib -m32 -g
 
 # Rules
 .PHONY: all
