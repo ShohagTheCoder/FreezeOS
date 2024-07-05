@@ -28,10 +28,10 @@ hang:
     jmp hang            ; Jump to the hang label, creating an infinite loop
 
 ; Include helper files
-%include "bootloader/helpers/read_disk.asm"
-%include "bootloader/helpers/gdt.asm"
-%include "bootloader/helpers/jmp_to_pm.asm"
-%include "bootloader/helpers/protected_mode.asm"
+%include "helpers/read_disk.asm"
+%include "helpers/gdt.asm"
+%include "helpers/jmp_to_pm.asm"
+%include "helpers/protected_mode.asm"
 
 ; Bootloader healper and signature
 times 510-($-$$) db 0   ; Fill the rest of the boot sector with zeros

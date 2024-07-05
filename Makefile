@@ -1,75 +1,35 @@
+# Variables
 BUILD_DIR			:= build
-SRC_KERNEL_DIR		:= kernel
-SRC_BOOT_DIR		:= bootloader
-
 ISO_DIR				:= $(BUILD_DIR)/iso
 ISO_FILE			:= $(ISO_DIR)/freeze.img
+BOOTLOADER_BIN		:= $(BUILD_DIR)/bootloader/boot.bin
+KERNEL_BIN			:= $(BUILD_DIR)/kernel/kernel.bin
 
-BUILD_BOOT_DIR		:= $(BUILD_DIR)/bootloader
-BUILD_KERNEL_DIR	:= $(BUILD_DIR)/kernel
 
-# Source files
-BOOTLOADER_ASM		:= $(SRC_BOOT_DIR)/boot.asm
-X86_START_ASM		:= $(SRC_KERNEL_DIR)/arch/x86/start.asm
-KERNEL_C			:= $(SRC_KERNEL_DIR)/kernel.c
-LD_FILE				:= configs/kernel/linker.ld
-
-# Object files
-BOOTLOADER_OBJ		:= $(BUILD_BOOT_DIR)/boot.o
-X86_START_OBJ		:= $(BUILD_KERNEL_DIR)/start.o
-KERNEL_OBJ			:= $(BUILD_KERNEL_DIR)/kernel.o
-
-# Binary files
-BOOTLOADER_BIN		:= $(BUILD_BOOT_DIR)/boot.bin
-KERNEL_BIN			:= $(BUILD_KERNEL_DIR)/kernel.bin
-
-BUILD_BIN_FILES		:= $(shell find $(BUILD_DIR) -name '*.bin')
-BUILD_OBJ_FILES		:= $(shell find $(BUILD_DIR) -name '*.o')
-
-# Toolchain
-ASM					:= nasm
-CC					:= gcc
-LD					:= ld
-QEMU				:= qemu-system-i386
-DD 					:= dd
-
-KERNEL_C_FILES		:= $(SRC_KERNEL_DIR)/kernel.c $(SRC_KERNEL_DIR)/drivers/keyboard.c $(SRC_KERNEL_DIR)/lib/string.c  $(SRC_KERNEL_DIR)/drivers/console.c $(SRC_KERNEL_DIR)/io.c
-KERNEL_OBJ_FILES	:= $(patsubst $(SRC_KERNEL_DIR)/%.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
-
-# Compilation flags
-ASMFLAGS			:= -f bin
-CFLAGS				:= -ffreestanding -Wall -nostdlib -m32
-
-# All rules
-.PHONY : all clean run debug
-
+# Rules
+.PHONY : all clean run debug bootloader kernel
 all : clean $(ISO_FILE) run
-now : $(ISO_FILE) run
 
-$(ISO_FILE): $(BOOTLOADER_BIN) $(KERNEL_BIN)
+$(ISO_FILE): kernel
 	@mkdir -p $(@D)
-	$(DD) if=/dev/zero of=$(ISO_FILE) bs=512 count=2880
-	$(DD) if=$(BOOTLOADER_BIN) of=$@ conv=notrunc
-	$(DD) if=$(KERNEL_BIN) of=$@ bs=512 seek=1 conv=notrunc
+	dd if=/dev/zero of=$(ISO_FILE) bs=512 count=2880
+	dd if=$(BOOTLOADER_BIN) of=$@ conv=notrunc
+	dd if=$(KERNEL_BIN) of=$@ bs=512 seek=1 conv=notrunc
 
-
-$(KERNEL_BIN) : $(KERNEL_OBJ_FILES)
-	$(LD) -T $(LD_FILE) -m elf_i386 -o $@ $^
-	
-$(BUILD_KERNEL_DIR)/%.o : $(SRC_KERNEL_DIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
-	
-$(BOOTLOADER_BIN) : $(BOOTLOADER_ASM)
-	@mkdir -p $(@D)
-	$(ASM) $(ASMFLAGS) $< -o $@
+kernel:
+	$(MAKE) -C bootloader
+	$(MAKE) -C kernel
 
 run : 
-	$(QEMU) -drive format=raw,file=$(ISO_FILE)
+	qemu-system-i386 -drive format=raw,file=$(ISO_FILE)
 
 clean:
 	rm -rf $(BUILD_DIR)/*
 	clear
 
+# Debug section
 debug: 
-	$(QEMU) -s -S -kernel $(ISO_FILE)
+	qemu-system-i386 -s -S -kernel $(ISO_FILE)
+
+gdb:
+	gdb -ex "target remote localhost:1234"

@@ -1,7 +1,0 @@
----
-# Example .clang-format configuration
-BasedOnStyle: LLVM
-IndentWidth: 4
-UseTab: Never
-BreakBeforeBraces: Allman
-...
