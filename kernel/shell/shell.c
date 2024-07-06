@@ -1,5 +1,6 @@
 #include "../includes/shell.h"
 #include "../includes/console.h"
+#include "../includes/keyboard.h"
 #include "../includes/string.h"
 
 static char shell_buffer[256];
@@ -9,12 +10,9 @@ void shell_init()
     // Clear the screen and print welcome
     keyboard_bind(&shell);
     clear_screen();
-    print_str("------------------------------------------------------------------------------");
-    put_nl();
+    hr();
     print_str("Welcome to FreezeOS v1.0.3");
-    put_nl();
-    print_str("------------------------------------------------------------------------------");
-    put_nl();
+    hr();
     print_str("> ");
 }
 
@@ -54,10 +52,7 @@ void execute_command(char buffer[])
     }
     else
     {
-        print_str("The command '");
-        print_str(buffer);
-        print_str("' is unknown");
-        put_nl();
+        command_unknown(buffer);
     }
 
     // Reset the buffer

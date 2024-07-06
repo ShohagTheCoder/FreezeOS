@@ -17,3 +17,11 @@ void command_help()
     print_str("- cd    : Change directory");
     put_nl();
 }
+
+void command_unknown(char buffer[])
+{
+    print_str("The command '");
+    print_str(buffer);
+    print_str("' is unknown.");
+    put_nl();
+}

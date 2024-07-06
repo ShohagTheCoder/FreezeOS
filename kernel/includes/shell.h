@@ -3,6 +3,7 @@
 
 void execute_command(char buffer[]);
 void command_help();
+void command_unknown(char buffer[]);
 void shell(char c);
 void shell_init();
 

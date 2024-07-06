@@ -6,5 +6,6 @@ void clear_screen();
 void putchar(char c);
 void put_nl();
 void cursor_back(int count);
+void hr();
 
 #endif

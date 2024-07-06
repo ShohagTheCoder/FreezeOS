@@ -2,7 +2,7 @@
 BUILD_DIR			:= build
 ISO_DIR				:= $(BUILD_DIR)/iso
 ISO_FILE			:= $(ISO_DIR)/freeze.img
-BOOT_BIN		:= $(BUILD_DIR)/boot/boot.bin
+BOOT_BIN			:= $(BUILD_DIR)/boot/boot.bin
 KERNEL_BIN			:= $(BUILD_DIR)/kernel/kernel.bin
 KERNEL_ELF			:= $(BUILD_DIR)/kernel/kernel.elf
 

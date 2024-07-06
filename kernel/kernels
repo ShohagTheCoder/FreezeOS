@@ -1,0 +1,8 @@
+kernel.c
+interrupts/idt.c
+drivers/keyboard.c
+libs/string.c
+drivers/console.c
+io.c shell/shell.c
+shell/commands.c
+drivers/disk.c

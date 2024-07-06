@@ -79,7 +79,23 @@ void putchar(char c)
 void put_nl()
 {
     putchar('\n');
-    putchar(' ');
+}
+
+void hr()
+{
+    // Move to new line if needed
+    if (cursor_col > 0)
+    {
+        cursor_col = 0;
+        cursor_row += 1;
+        move_cursor();
+    }
+
+    // Print the hr
+    for (char i = 0; i < VGA_WIDTH; i++)
+    {
+        putchar('-');
+    }
 }
 
 // Function to clear the screen in VGA text mode
@@ -98,5 +114,4 @@ void clear_screen()
     cursor_col = 0;
     cursor_row = 0;
     move_cursor();
-    putchar(' ');
 }
