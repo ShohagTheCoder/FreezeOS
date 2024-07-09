@@ -88,6 +88,10 @@ load_kernel:
 
     ; Load file clusters
     mov cx, ax  ; Start cluster (returned from find_file)
+    mov si, 0x8e00
+    mov dl, 2
+    call read_sector
+
 load_cluster:
     ; mov ah, 0x0e
     ; mov al, '4'
@@ -117,7 +121,7 @@ load_cluster:
     int 0x10
     call print_string
 
-
+    ; call get_next_cluster
     
     jmp $
 
@@ -231,11 +235,17 @@ get_next_cluster:
     ; mov al, '5'
     ; int 0x10
     ; Calculate FAT entry
-    xor dx, dx
-    mov di, cx  ; cx contains the current cluster number
-    mov bx, di
-    shr bx, 1
-    add di, bx
+    ; xor dx, dx
+    ; mov di, cx  ; cx contains the current cluster number
+    ; mov bx, di
+    ; shr bx, 1
+    ; add di, bx
+
+    add cx, 2 ; fat start location
+    mov al, [si]
+    add cx, 1
+    mov ah, [si]
+
 
     ; Read FAT sector
     mov ax, [BytesPerSector]
