@@ -1,5 +1,4 @@
 [BITS 16]
-[ORG 0x7C00]
 
 ; Define the BIOS Parameter Block (BPB)
 jmp short start
