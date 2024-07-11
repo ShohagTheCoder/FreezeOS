@@ -29,7 +29,7 @@ clean:
 	clear
 
 # Debug section
-debug: 
+debug: clean $(ISO_FILE)
 	qemu-system-i386 -s -S -kernel $(ISO_FILE)
 
 gdb:

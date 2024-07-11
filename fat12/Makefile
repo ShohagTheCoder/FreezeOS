@@ -56,7 +56,7 @@ clean:
 run:
 	qemu-system-i386 -hda $(ACTIVE_ISO)
 
-debug:
+debug: clean build
 	qemu-system-i386 -hda $(ACTIVE_ISO) -s -S
 
 gdb:
