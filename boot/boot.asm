@@ -17,7 +17,7 @@ load_the_kernel:
 	mov al, 40					; Numbers of sector to read
 
 	; Call read from disk
-	call read_disk
+	call read_disk 
 	ret
 
 ; Variables

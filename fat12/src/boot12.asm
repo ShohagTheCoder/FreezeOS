@@ -6,14 +6,14 @@ jmp short start
 nop
 OEMLabel            db 'MSDOS5.0'    ; OEM Name
 BytesPerSector      dw 512           ; Bytes per sector
-SectorsPerCluster   db 4             ; Sectors per cluster
-ReservedSectors     dw 4             ; Reserved sectors
+SectorsPerCluster   db 1             ; Sectors per cluster
+ReservedSectors     dw 1             ; Reserved sectors
 NumberOfFATs        db 2             ; Number of FATs
-RootEntries         dw 512           ; Root directory entries
-TotalSectors        dw 20480          ; Total sectors (for 1.44MB floppy)
-MediaDescriptor     db 0xF8          ; Media descriptor
-SectorsPerFAT       dw 20             ; Sectors per FAT
-SectorsPerTrack     dw 32            ; Sectors per track
+RootEntries         dw 224           ; Root directory entries
+TotalSectors        dw 2880          ; Total sectors (for 1.44MB floppy)
+MediaDescriptor     db 0xF0          ; Media descriptor
+SectorsPerFAT       dw 9             ; Sectors per FAT
+SectorsPerTrack     dw 18            ; Sectors per track
 NumberOfHeads       dw 2             ; Number of heads
 HiddenSectors       dd 0             ; Hidden sectors
 TotalSectorsBig     dd 0             ; Total sectors (if TotalSectors is 0)
@@ -22,63 +22,36 @@ Reserved1           db 0             ; Reserved
 BootSignature       db 0x29          ; Extended boot signature
 VolumeID            dd 0x12345678    ; Volume ID
 VolumeLabel         db 'NO NAME    ' ; Volume label
-FileSystemType      db 'FAT16   '    ; File system type
+FileSystemType      db 'FAT12   '    ; File system type
 BootCode:
 
 start:
-    ; Setup stacks
+    ; mov ah, 0x0e
+    ; mov al, '1'
+    ; int 0x10
+    ; Set up stack
     xor ax, ax
     mov ss, ax
     mov sp, 0x7C00
-    
-    ; Call load fat
-    call load_fat
 
     ; Load the kernel
-    ; call load_kernel
+    call load_kernel
 
-    mov ax, [SectorsPerFAT]
-    mov bx, [NumberOfFATs]
-    mul bx
-    mov cl, al
-    add cl, [ReservedSectors]
-    mov ax, [RootEntries]
-    mov bx, 32
-    mul bx
-    mov bx, 512
-    div bx
-    add cl, al
-    add cl, 5
-    cmp cl, 63
-
-    jg next_head
-
-    jmp current_head
-
-next_head:
-    sub cl, 63
-    add dh, 1
-
-current_head:
-    mov dl, cl
-    ; mov dl, 18
-    mov si, 0x7e00
-    call read_sector
+    ; mov dl, 35
+    ; mov si, 0x7e00
+    ; call read_sector
 
     ; mov bx, 0x7e00
+    ; mov al, 10
+    ; mov cl, 35
     ; mov ah, 0x02 		; BIOS read sector function
-    ; mov al, 1
-    ; mov cl, 18
     ; mov ch, 0
-	; mov dh, 1
-    ; mov dl, 0x80
+	; mov dh, 0
     ; int 0x13
 
-    ; jc disk_error
-
-
-    ; mov si, 0x7e00
-    ; call print_string
+    ; mov ah, 0x0e
+    ; mov al, byte [0x7e00]
+    ; int 0x10
     ; mov al, byte [0x7e01]
     ; int 0x10
 
@@ -86,31 +59,7 @@ current_head:
     ; jmp 0x1000:0000
     ; jmp 0x7e00
     ; jmp [si]
-
-
-
     jmp $
-
-load_fat:
-    mov dl, 5
-    mov si, 0xf000
-    call read_sector
-    mov ax, [si]
-    cmp ax, 0xfff8
-    je .fat_Loaded
-
-    ; Faild to load the fat
-    mov ah, 0x0e
-    mov al, 'F'
-    int 0x10
-    ret
-
-.fat_Loaded
-    mov ah, 0x0e
-    mov al, 'L'
-    int 0x10
-    ret
-
 
 print_string:
     mov ah, 0x0e
@@ -185,9 +134,9 @@ kernel_loaded:
     ret
 
 disk_error:
-    mov ah, 0x0e
-    mov al, 'D'
-    int 0x10
+    ; mov ah, 0x0e
+    ; mov al, 'D'
+    ; int 0x10
     hlt
 
 find_file:
@@ -200,7 +149,7 @@ find_file:
     ; add dx, 1
     ; mov ax, dx
     ; mov bx, 0x7e00
-    ; mov dx, ReservedSectors + (NumberOfFATs * SectorsPerFAT) + 1
+    mov dx, 20
     mov si, 0x7e00
     call read_sector
 
@@ -336,6 +285,7 @@ read_sector:
     mov al, 1          ; Read one sector
     mov ch, 0          ; Cylinder number
     mov cl, dl         ; Sector number
+    mov dh, 0          ; Head number
     mov dl, 0x80           ; Drive number
     mov bx, si         ; Buffer to read into
     int 0x13
