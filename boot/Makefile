@@ -16,6 +16,7 @@ all: $(BOOT_BIN)
 $(BOOT_BIN) : $(BOOT_ASM)
 	@mkdir -p $(@D)
 	nasm -f bin $< -o $@
-	sed 's/\[org 0x7c00\]/;org here/i' $< > $(BOOT_DEBUG_ASM)
-	nasm -f elf -g $(BOOT_DEBUG_ASM) -o $(BOOT_OBJ)
-	ld -T $(LD_FILE) -m elf_i386 -o $(BOOT_ELF) $(BOOT_OBJ)
+
+# sed 's/\[org 0x7c00\]/;org here/i' $< > $(BOOT_DEBUG_ASM)
+# nasm -f elf -g $(BOOT_DEBUG_ASM) -o $(BOOT_OBJ)
+# ld -T $(LD_FILE) -m elf_i386 -o $(BOOT_ELF) $(BOOT_OBJ)

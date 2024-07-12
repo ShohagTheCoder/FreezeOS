@@ -10,6 +10,9 @@ extern keyboard_handler
 global kernel_entry
 kernel_entry:
 
+    mov byte [0xb8000], 'K'
+    mov byte [0xb8001], 0x4f
+
     call kernel         ; Call the kernel
 
     jmp $
