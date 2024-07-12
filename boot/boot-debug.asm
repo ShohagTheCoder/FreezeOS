@@ -1,5 +1,6 @@
 ; boot.asm
 [BITS 16]
+;org here
 
 ; Starting point
 start:

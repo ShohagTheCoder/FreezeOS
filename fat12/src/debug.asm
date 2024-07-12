@@ -1,4 +1,5 @@
 [BITS 16]
+;org here
 
 ; Define the BIOS Parameter Block (BPB)
 jmp short start
@@ -24,7 +25,7 @@ VolumeLabel         db 'NO NAME    ' ; Volume label
 FileSystemType      db 'FAT16   '    ; File system type
 
 ; Kernel location
-fat_location        dw 0xf000
+fat_location        dw 0xe000
 kernel_location     dw 0x9000
 
 start:
@@ -33,13 +34,26 @@ start:
     mov ss, ax
     mov sp, 0x7C00
 
+    ; mov cx, 3
+    ; mov dx, [kernel_location]
+    ; call load_cluster
+
     ; Call load fat
     call load_fat
 
     ; Load the kernel
     call load_kernel
 
-    mov si, [kernel_location]
+    ; mov ah, 0x02
+    ; mov al, [SectorsPerCluster]          ; Read one sector
+    ; mov ch, 0          ; Cylinder number
+    ; mov cl, 26         ; Sector number
+    ; mov dl, 0x80           ; Drive number
+    ; mov dh, 1
+    ; mov bx, [kernel_location]         ; Buffer to read into
+    ; int 0x13
+
+    mov si, 0x9000
     call print_string
 
     jmp $
@@ -55,13 +69,13 @@ load_fat:
     ; Faild to load the fat
     mov ah, 0x0e
     mov al, 'F'
-    int 0x10
+    ; int 0x10
     ret
 
 .fat_Loaded:
     mov ah, 0x0e
     mov al, 'L'
-    int 0x10
+    ; int 0x10
     ret
 
 print_string:
@@ -82,16 +96,12 @@ load_kernel:
 
     ; Move the next cluster number on cl register
     mov cx, ax
-    mov dx, [kernel_location]
+    ; mov dx, [kernel_location]
     call load_cluster
 
     ret
 
 load_cluster:
-    mov ah, 0x0e
-    mov al, 'K'
-    ; int 0x10
-
     call load_data
 
     mov si, [fat_location]
@@ -116,21 +126,20 @@ load_cluster:
     mul bx
 
     ; Move offset to current position
+    mov dx, [kernel_location]
     add dx, ax
+    mov [kernel_location], dx
 
-    mov ah, 0x0e
-    mov al, 'J'
-    ; int 0x10
-    
     jmp load_cluster
 load_data:
-    push dx
-    mov si, dx
-    mov dl, cl
-    add dl, 18
+    mov al, cl
+    mov bl, 4
+    mul bl
+    mov dl, al
+    add dl, 6
     mov dh, 1
+    mov si, [kernel_location]
     call read_sector
-    pop dx
     ret
 
 kernel_loaded:
@@ -142,7 +151,7 @@ kernel_loaded:
 disk_error:
     mov ah, 0x0e
     mov al, 'D'
-    int 0x10
+    ; int 0x10
     hlt
 
 find_file:
@@ -176,7 +185,7 @@ find_file_loop:
 file_not_found:
     mov ah, 0x0e
     mov al, 'N'
-    int 0x10
+    ; int 0x10
     jmp $
 
 file_found:
@@ -188,9 +197,6 @@ file_found:
     ret
 
 read_sector:
-    ; mov ah, 0x0e
-    ; mov al, 'R'
-    ; int 0x10
     ; Read sector from disk
     pusha
     mov ah, 0x02
@@ -205,7 +211,7 @@ read_sector:
     ret
 
 
-kernel_name db 'ONE     TXT', 0
+kernel_name db 'TWO     TXT', 0
 ; end_of_code db '-END OF CODE', 0
 
 TIMES 510-($-$$) db 0

@@ -22,9 +22,7 @@ all: $(KERNEL_BIN)
 
 $(KERNEL_BIN): $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ_FILES)
 	ld -T $(LD_FILE) -m elf_i386 -o $(KERNEL_ELF) $^
-	ld -T $(LD_FILE) -m elf_i386 -o $(DEBUG_ELF) $(BOOT_OBJ) $^ 
 	objcopy -O binary $(KERNEL_ELF) $@
-	 
 	
 $(BUILD_KERNEL_DIR)/%.o: %.c
 	@mkdir -p $(@D)

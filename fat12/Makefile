@@ -7,8 +7,10 @@ all: clean build run
 
 build:
 	nasm -f bin -o build/boot.bin src/bootloader.asm
-	sed '2d' src/bootloader.asm > src/debug.asm
+	sed 's/\[org 0x7c00\]/;org here/i' src/bootloader.asm > src/debug.asm
 	nasm -f elf -g -o build/boot.o src/debug.asm
+	ld -T linker.ld -m elf_i386 -o build/boot.elf build/boot.o
+
 # nasm -f bin -o build/k.bin src/k.asm
 
 # gcc -m32 -ffreestanding -nostdlib -fno-pie -c src/kernel.c -o build/kernel.o
@@ -61,6 +63,8 @@ run:
 debug: clean build
 	qemu-system-i386 -hda $(ACTIVE_ISO) -s -S
 
-gdb:
-	gdb -ex "file build/boot.o" -ex "target remote localhost:1234" -ex "layout asm" -ex "b load_cluster" -ex "c"
+gdb-only:
+	gdb -ex "target remote localhost:1234" -ex "layout asm" -ex "b *0x7c00" -ex "c"
 
+gdb-with:
+	gdb -ex "file build/boot.elf"  -ex "target remote localhost:1234" -ex "layout asm"
