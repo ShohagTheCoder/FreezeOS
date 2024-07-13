@@ -42,13 +42,17 @@ void shell(char c)
 
 void execute_command(char buffer[])
 {
-    if (str_cmp(buffer, "help"))
+    if (str_cmp("help", buffer))
     {
         command_help();
     }
-    else if (str_cmp(buffer, "clear"))
+    else if (str_cmp("clear", buffer))
     {
         clear_screen();
+    }
+    else if (str_cmp("ls", buffer))
+    {
+        command_ls();
     }
     else
     {

@@ -5,26 +5,30 @@
 
 typedef struct
 {
-    uint8_t jump[3];
-    char oem[8];
-    uint16_t bytes_per_sector;
-    uint8_t sectors_per_cluster;
-    uint16_t reserved_sectors;
-    uint8_t num_fats;
-    uint16_t root_entries;
-    uint16_t total_sectors;
-    uint8_t media_descriptor;
-    uint16_t sectors_per_fat;
-    uint16_t sectors_per_track;
-    uint16_t num_heads;
-    uint32_t hidden_sectors;
-    uint32_t large_sector_count;
-    uint8_t drive_number;
+    uint16_t position;
+} ClusterChain_t;
+
+typedef struct
+{
+    uint8_t extra[32];
+    uint8_t name[8];
+    uint8_t extension[3];
+    uint8_t attribute;
     uint8_t reserved;
-    uint8_t boot_signature;
-    uint32_t volume_id;
-    char volume_label[11];
-    char fs_type[8];
-} __attribute__((packed)) FAT12BootSector;
+    uint8_t create_time_tenth;
+    uint16_t create_time;
+    uint16_t create_date;
+    uint16_t last_access_date;
+    uint16_t first_cluster_high;
+    uint16_t write_time;
+    uint16_t write_date;
+    uint16_t first_cluster_low;
+    uint32_t size;
+
+} __attribute__((packed)) DirEntry_t;
+
+void load_fat();
+void load_root_entries();
+DirEntry_t find_file(char name[], char extension[]);
 
 #endif

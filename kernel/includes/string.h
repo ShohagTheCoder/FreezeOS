@@ -12,6 +12,7 @@ int count_digits(int n);
 void str_append(char str[], char n);
 int str_remove(char str[]);
 int str_cmp(char* str1, char* str2);
+int str_cmp_in(char* str1, char* str2, int count);
 void reset_str(char* str);
 
 #endif

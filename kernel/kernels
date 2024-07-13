@@ -5,4 +5,5 @@ libs/string.c
 drivers/console.c
 io.c shell/shell.c
 shell/commands.c
+fs/fs.c
 drivers/disk.c

@@ -15,6 +15,8 @@ int strlen(char* str)
     int len = 0;
     while (str[len] != '\0')
     {
+        if (len > 100)
+            break;
         len++;
     }
 
@@ -69,22 +71,28 @@ void int_to_ascii(int n, char str[])
     } while (n > 0);
 }
 
-int str_cmp(char* str1, char* str2)
+int str_cmp_in(char* str1, char* str2, int count)
 {
-    while (*str1 && (*str1 == *str2))
+    while (count && *str1 && (*str1 == *str2))
     {
+        count--;
         str1++;
         str2++;
     }
-    // Check if both strings have reached the end simultaneously (both are '\0')
-    if (*str1 == '\0' && *str2 == '\0')
+    return count == 0 ? 1 : 0;
+}
+
+int str_cmp(char* str1, char* str2)
+{
+    int count = strlen(str1);
+
+    while (count && *str1 && (*str1 == *str2))
     {
-        return 1;  // Strings match
+        count--;
+        str1++;
+        str2++;
     }
-    else
-    {
-        return 0;  // Strings do not match
-    }
+    return count == 0 ? 1 : 0;
 }
 
 void reset_str(char* str)

@@ -1,4 +1,5 @@
 #include "../includes/console.h"
+#include "../includes/fs.h"
 #include "../includes/shell.h"
 #include "../includes/string.h"
 
@@ -16,6 +17,19 @@ void command_help()
     put_nl();
     print_str("- cd    : Change directory");
     put_nl();
+}
+
+void command_ls()
+{
+    for (int i = 0; i < 5; i++)
+    {
+        // DirEntry_t entry = root_entries[i];
+        // print_str(entry.name);
+        print_str(" - ");
+        print_int(i);
+        // print_str(entry.extension);
+        put_nl();
+    }
 }
 
 void command_unknown(char buffer[])

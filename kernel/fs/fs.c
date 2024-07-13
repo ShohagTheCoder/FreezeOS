@@ -1,61 +1,60 @@
 #include "../includes/fs.h"
+#include "../includes/console.h"
+#include "../includes/disk.h"
+#include "../includes/io.h"
+#include "../includes/string.h"
 
-void read_boot_sector(uint8_t* buffer)
-{
-    read_sector(0, buffer);  // Assuming read_sector reads a sector into buffer
-    FAT12BootSector* boot_sector = (FAT12BootSector*)buffer;
-    // Now boot_sector contains the boot sector data
-}
-
-int read_file(const char* filename, uint8_t* buffer)
-{
-    // Implement file reading logic using FAT and directory entries
-    // 1. Locate the file in the directory
-    // 2. Read file clusters using FAT
-    // 3. Copy file data to buffer
-    return 0;  // Return the number of bytes read
-}
-
-// You may need to adjust these definitions to match your system
+// Constants
 #define SECTOR_SIZE 512
+#define BYTES_PER_SECTOR 512
+#define SECTORS_PER_CLUSTER 4
+#define RESERVED_SECTORS 4
+#define NUMBER_OF_FATS 2
+#define ROOT_ENTRIES 512
+#define ROOT_ENTRIES_SIZE 32
+#define TOTAL_SECTORS 20480
+#define SECTORS_PER_FAT 20
 
-// Function prototypes
-void read_sector(uint32_t lba, void* buffer);
-void read_sectors(uint32_t start_lba, uint32_t num_sectors, void* buffer);
+DirEntry_t root_entries[256];
+ClusterChain_t fat[512];
 
-void read_sectors(uint32_t start_lba, uint32_t num_sectors, void* buffer)
+DirEntry_t empty_entry = {.extra = {0},
+                          .name = {0},
+                          .extension = {0},
+                          .attribute = 0,
+                          .reserved = 0,
+                          .create_time_tenth = 0,
+                          .create_time = 0,
+                          .create_date = 0,
+                          .last_access_date = 0,
+                          .first_cluster_high = 0,
+                          .write_time = 0,
+                          .write_date = 0,
+                          .first_cluster_low = 0,
+                          .size = 0};
+
+void load_root_entries()
 {
-    uint8_t* buf = (uint8_t*)buffer;
-    for (uint32_t i = 0; i < num_sectors; i++)
-    {
-        read_sector(start_lba + i, buf + (i * SECTOR_SIZE));
-    }
+    uint32_t root_entries_start = RESERVED_SECTORS + (SECTORS_PER_FAT * 2);
+    read_sectors(root_entries, root_entries_start, 1);
+    putchar('C');
 }
 
-// Example implementation of read_sector
-// This is a placeholder; you need to replace it with your actual disk read function
-void read_sector(uint32_t lba, void* buffer)
+void load_fat()
 {
-    // This function should be implemented based on your system's disk I/O method
-    // Here is an example for an ATA PIO mode read (simplified):
+    uint32_t fat_start = RESERVED_SECTORS;
+    read_sectors(fat, fat_start, 1);
+}
 
-    // 1. Send the LBA address and read command to the disk controller
-    // 2. Wait for the disk to be ready for data transfer
-    // 3. Read the data from the disk controller's data register into the buffer
-
-    // Example (pseudo-code, replace with actual implementation):
-    // outb(0x1F6, (lba >> 24) | 0xE0); // Send the high byte of the LBA
-    // outb(0x1F2, 1);                  // Sector count
-    // outb(0x1F3, lba & 0xFF);         // LBA low byte
-    // outb(0x1F4, (lba >> 8) & 0xFF);  // LBA mid byte
-    // outb(0x1F5, (lba >> 16) & 0xFF); // LBA high byte
-    // outb(0x1F7, 0x20);               // Send read command (0x20 for read sectors)
-
-    // Wait for the drive to signal that it's ready to transfer data
-    // while (!(inb(0x1F7) & 0x08));
-
-    // Read data into the buffer
-    // for (int i = 0; i < SECTOR_SIZE / 2; i++) {
-    //     ((uint16_t*)buffer)[i] = inw(0x1F0);
-    // }
+DirEntry_t find_file(char name[], char extension[])
+{
+    for (int i = 0; i < 256; i++)
+    {
+        if (str_cmp_in(name, (char*)root_entries[i].name, 8) &&
+            str_cmp_in(extension, (char*)root_entries[i].extension, 3))
+        {
+            return root_entries[i];
+        }
+    }
+    return empty_entry;
 }
