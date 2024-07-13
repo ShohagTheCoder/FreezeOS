@@ -21,14 +21,29 @@ void command_help()
 
 void command_ls()
 {
-    for (int i = 0; i < 5; i++)
+    extern DirEntry_t root_entries[256];
+
+    print_str("-------------------------------");
+    put_nl();
+    print_str(" Name     | Ext | Size");
+    put_nl();
+    print_str("-------------------------------");
+    put_nl();
+
+    for (int i = 0; i < 256; i++)
     {
-        // DirEntry_t entry = root_entries[i];
-        // print_str(entry.name);
-        print_str(" - ");
-        print_int(i);
-        // print_str(entry.extension);
-        put_nl();
+        if (strlen(root_entries[i].name) > 0)
+        {
+            putchar(' ');
+            DirEntry_t entry = root_entries[i];
+            print_str_in(entry.name, 8);
+            print_str(" | ");
+            print_str_in(entry.extension, 3);
+            print_str(" | ");
+            print_int(entry.size);
+            print_str(" (char)");
+            put_nl();
+        }
     }
 }
 

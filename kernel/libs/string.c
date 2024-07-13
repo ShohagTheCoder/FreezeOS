@@ -115,6 +115,14 @@ void print_str(char* str)
     }
 }
 
+void print_str_in(char* str, int count)
+{
+    while (count--)
+    {
+        putchar(*str++);
+    }
+}
+
 // Example implementation of print_int assuming screen output functions exist
 void print_int(int n)
 {

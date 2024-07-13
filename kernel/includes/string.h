@@ -4,6 +4,7 @@
 #include "types.h"
 
 void print_str(char* str);
+void print_str_in(char* str, int count);
 int strlen(char* str);
 void int_to_ascii(int n, char str[]);
 void print_int(int n);
