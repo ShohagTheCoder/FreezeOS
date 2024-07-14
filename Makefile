@@ -20,9 +20,10 @@ $(ISO_FILE): kernel
 	dd if=$(BOOT_BIN) of=$@ conv=notrunc
 
 	sudo mount -o loop $@ $(MOUNT_POINT)
-# sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
 	sudo cp $(LOADER_BIN) $(MOUNT_POINT)
+	sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
 	sudo cp one.txt $(MOUNT_POINT)
+	sudo cp two.txt $(MOUNT_POINT)
 	sudo umount $(MOUNT_POINT)
 
 kernel:
@@ -41,7 +42,7 @@ debug: clean $(ISO_FILE)
 	qemu-system-i386 -s -S -kernel $(ISO_FILE)
 
 gdb-only:
-	gdb -ex "target remote localhost:1234" -ex "layout asm" -ex "b *0x7c00" -ex "c"
+	gdb -ex "target remote localhost:1234" -ex "layout asm" -ex "br *0x7c00" -ex "c"
 
 gdb-boot:
 	gdb -ex "file $(BOOT_ELF)" -ex "target remote localhost:1234" -ex "layout asm"
