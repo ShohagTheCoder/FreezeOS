@@ -10,5 +10,5 @@ protected_mode:
     mov gs, ax           ; Set GS to the data segment
     mov ss, ax           ; Set SS to the data segment
 
-    ; Jump to the kernel's starting location
-    jmp kernel_location ; Call the kernel's entry point
+    ; Jump to the loader's starting location
+    jmp loader_location ; Call the loader's entry point

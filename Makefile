@@ -5,6 +5,7 @@ ISO_FILE			:= $(ISO_DIR)/freeze.img
 BOOT_BIN			:= $(BUILD_DIR)/boot/boot.bin
 BOOT_ELF			:= $(BUILD_DIR)/boot/boot.elf
 KERNEL_ELF			:= $(BUILD_DIR)/kernel/kernel.elf
+LOADER_BIN			:= $(BUILD_DIR)/kernel/loader.bin
 KERNEL_BIN			:= $(BUILD_DIR)/kernel/kernel.bin
 MOUNT_POINT			:= /mnt
 
@@ -19,7 +20,8 @@ $(ISO_FILE): kernel
 	dd if=$(BOOT_BIN) of=$@ conv=notrunc
 
 	sudo mount -o loop $@ $(MOUNT_POINT)
-	sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
+# sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
+	sudo cp $(LOADER_BIN) $(MOUNT_POINT)
 	sudo cp one.txt $(MOUNT_POINT)
 	sudo umount $(MOUNT_POINT)
 

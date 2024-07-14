@@ -15,7 +15,7 @@ find_file:
     mov cx, RootEntries
 find_file_loop:
     ; Check if this is the file we are looking for
-    mov di, kernel_name
+    mov di, loader_name
     mov cx, 11
     repe cmpsb
     je file_found

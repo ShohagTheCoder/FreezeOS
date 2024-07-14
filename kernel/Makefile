@@ -6,6 +6,8 @@ KERNEL_C_FILES		:= $(shell cat kernels)
 KERNEL_OBJ_FILES	:= $(patsubst %.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
 KERNEL_ELF	 		:= $(BUILD_KERNEL_DIR)/kernel.elf
 DEBUG_ELF	 		:= $(BUILD_KERNEL_DIR)/debug.elf
+LOADER_ASM	 		:= arch/x86/kernel_loader.asm
+LOADER_BIN	 		:= $(BUILD_KERNEL_DIR)/loader.bin
 KERNEL_BIN	 		:= $(BUILD_KERNEL_DIR)/kernel.bin
 KERNEL_ENTRY_ASM	:= arch/x86/kernel_entry.asm
 KERNEL_ENTRY_OBJ	:= $(BUILD_KERNEL_DIR)/kernel_entry.o
@@ -18,7 +20,11 @@ CFLAGS				:= -ffreestanding -Wall -nostdlib -m32 -g
 
 # Rules
 .PHONY: all
-all: $(KERNEL_BIN)
+all: $(LOADER_BIN) $(KERNEL_BIN)
+
+$(LOADER_BIN): $(LOADER_ASM)
+	@mkdir -p $(@D)
+	nasm -f bin $< -o $@
 
 $(KERNEL_BIN): $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ_FILES)
 	ld -T $(LD_FILE) -m elf_i386 -o $(KERNEL_ELF) $^

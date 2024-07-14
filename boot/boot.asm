@@ -25,20 +25,20 @@ VolumeID            dd 0x12345678    ; Volume ID
 VolumeLabel         db 'NO NAME    ' ; Volume label
 FileSystemType      db 'FAT16   '    ; File system type
 
-; Kernel location
+; loader location
 fat_location        dw 0x9000
-kernel_location    equ 0xa000
-kernel_offset       dw 0xa000
-; Kernel name
-kernel_name db 'KERNEL  BIN', 0
+loader_location    equ 0xa000
+loader_offset       dw 0xa000
+; loader name
+loader_name db 'LOADER  BIN', 0
 
 ; Starting point
 start:
 	; Load fat into memory
 	call load_fat
 
-    ; Load the kernel
-    call load_kernel
+    ; Load the loader
+    call load_loader
 
 	; Prepare for protected mode
     call jmp_to_pm
@@ -52,7 +52,7 @@ hang:
 %include "helpers/read_sector.asm"
 %include "helpers/load_fat.asm"
 %include "helpers/find_file.asm"
-%include "helpers/load_kernel.asm"
+%include "helpers/load_loader.asm"
 %include "helpers/gdt.asm"
 %include "helpers/jmp_to_pm.asm"
 %include "helpers/protected_mode.asm"

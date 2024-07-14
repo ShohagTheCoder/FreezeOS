@@ -1,5 +1,5 @@
-; load_kernel.asm
-load_kernel:
+; load_loader.asm
+load_loader:
     ; Find the file from root directory
     call find_file
 
@@ -28,7 +28,7 @@ load_cluster:
     sub si, ax
     cmp cx, 0xffff
     ; No cluster left
-    je kernel_loaded
+    je loader_loaded
 
     mov ax, 0
     mov bx, 0
@@ -37,9 +37,9 @@ load_cluster:
     mul bx
 
     ; Move offset to current position
-    mov dx, [kernel_offset]
+    mov dx, [loader_offset]
     add dx, ax
-    mov [kernel_offset], dx
+    mov [loader_offset], dx
 
     jmp load_cluster
 load_data:
@@ -53,11 +53,11 @@ load_data:
     mov dl, al
     add dl, 6
     mov dh, 1
-    mov si, [kernel_offset]
+    mov si, [loader_offset]
     call read_sector
     ret
 
-kernel_loaded:
+loader_loaded:
     mov ah, 0x0e
     mov al, "S"
     int 0x10
