@@ -7,3 +7,4 @@ io.c shell/shell.c
 shell/commands.c
 fs/fs.c
 drivers/disk.c
+memory/memory.c

@@ -3,6 +3,7 @@
 #include "includes/fs.h"
 #include "includes/idt.h"
 #include "includes/keyboard.h"
+#include "includes/memory.h"
 #include "includes/shell.h"
 #include "includes/string.h"
 
@@ -25,9 +26,4 @@ void kernel()
 
     // Initialize shell
     shell_init();
-
-    while (1)
-    {
-        // Infinite loop
-    }
 }

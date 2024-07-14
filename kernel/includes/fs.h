@@ -31,4 +31,9 @@ void load_fat();
 void load_root_entries();
 DirEntry_t find_file(char name[], char extension[]);
 
+void load_file(uint8_t* buffer, DirEntry_t file);
+uint16_t get_next_cluster_number(uint16_t current_cluster);
+
+void* file_read(char* name, char* ext);
+
 #endif

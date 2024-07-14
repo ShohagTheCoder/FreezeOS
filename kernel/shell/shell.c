@@ -54,6 +54,10 @@ void execute_command(char buffer[])
     {
         command_ls();
     }
+    else if (str_cmp("cat", buffer))
+    {
+        command_cat();
+    }
     else
     {
         command_unknown(buffer);

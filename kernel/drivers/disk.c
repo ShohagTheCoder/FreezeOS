@@ -39,22 +39,61 @@ void ata_wait_drq()
         ;
 }
 
-void read_sectors(void* buffer, uint32_t lba, uint8_t sector_count)
+void read_sector(uint8_t* buffer, uint32_t lba)
 {
     outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
 
-    outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, sector_count);
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, 1);
     outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (uint8_t)lba);
     outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (uint8_t)(lba >> 8));
     outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (uint8_t)(lba >> 16));
     outb(ATA_PRIMARY_IO + ATA_DRIVE_SELECT, 0xE0 | ((lba >> 24) & 0x0F));
     outb(ATA_PRIMARY_IO + ATA_COMMAND, ATA_CMD_READ_PIO);
 
+    // Load the data
+    ata_wait_busy();
+    ata_wait_drq();
+    insl(ATA_PRIMARY_IO + ATA_DATA, buffer, 256);  // 256 Words
+}
+
+void read_sectors(uint8_t* buffer, uint32_t lba, uint8_t sector_count)
+{
     for (uint8_t i = 0; i < sector_count; i++)
     {
-        ata_wait_busy();
-        ata_wait_drq();
-        insl(ATA_PRIMARY_IO + ATA_DATA, buffer, 256);  // 256 Words
-        buffer = buffer + 512;                         // Advance the buffer pointer by 512 bytes
+        read_sector(buffer, lba + i);
+        buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
+    }
+}
+
+void read_bytes(uint8_t* buffer, uint32_t lba, uint16_t offset, uint16_t bytes_count)
+{
+    uint8_t* placeholder[512];
+
+    outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
+
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, 1);
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (uint8_t)lba);
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (uint8_t)(lba >> 8));
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (uint8_t)(lba >> 16));
+    outb(ATA_PRIMARY_IO + ATA_DRIVE_SELECT, 0xE0 | ((lba >> 24) & 0x0F));
+    outb(ATA_PRIMARY_IO + ATA_COMMAND, ATA_CMD_READ_PIO);
+
+    // Load the data
+    ata_wait_busy();
+    ata_wait_drq();
+    insl(ATA_PRIMARY_IO + ATA_DATA, placeholder, 256);  // 256 Words
+
+    for (uint16_t i = 0; i <= bytes_count; i++)
+    {
+        buffer[i] = ((uint8_t*)placeholder)[offset + i];
+    }
+}
+
+void load_cluster(uint8_t* buffer, uint32_t lba)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        read_sector(buffer, lba + i);
+        buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
     }
 }

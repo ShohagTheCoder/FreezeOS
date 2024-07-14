@@ -7,5 +7,6 @@ void command_ls();
 void command_unknown(char buffer[]);
 void shell(char c);
 void shell_init();
+void command_cat();
 
 #endif

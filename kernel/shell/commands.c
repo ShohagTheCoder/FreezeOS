@@ -1,5 +1,6 @@
 #include "../includes/console.h"
 #include "../includes/fs.h"
+#include "../includes/memory.h"
 #include "../includes/shell.h"
 #include "../includes/string.h"
 
@@ -32,19 +33,27 @@ void command_ls()
 
     for (int i = 0; i < 256; i++)
     {
-        if (strlen(root_entries[i].name) > 0)
+        if (strlen((char*)root_entries[i].name) > 0)
         {
             putchar(' ');
             DirEntry_t entry = root_entries[i];
-            print_str_in(entry.name, 8);
+            print_str_in((char*)entry.name, 8);
             print_str(" | ");
-            print_str_in(entry.extension, 3);
+            print_str_in((char*)entry.extension, 3);
             print_str(" | ");
             print_int(entry.size);
             print_str(" (char)");
             put_nl();
         }
     }
+}
+
+void command_cat()
+{
+    char* file = file_read("ONE     ", "TXT");
+    print_str(file);
+    mem_free(file);
+    put_nl();
 }
 
 void command_unknown(char buffer[])
