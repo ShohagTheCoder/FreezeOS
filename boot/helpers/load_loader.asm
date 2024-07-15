@@ -5,6 +5,7 @@ load_loader:
 
     ; Move the cluster number on cx register
     mov cx, ax
+    mov si, loader_location
 
     ; Call load cluster to load all clusters of current file
     call load_cluster
@@ -14,51 +15,48 @@ load_loader:
 load_cluster:
     ; Load the cluster data to memory
     call load_data
+    push si
 
+    ; Get next cluster number
     mov si, [fat_location]
-    mov ax, 0
-    mov bx, 0
-
     mov ax, 2
     mov bx, cx
     mul bx
 
+    ; Check if cluster is last cluster
     add si, ax
     mov cx, [si]
     sub si, ax
     cmp cx, 0xffff
-    ; No cluster left
-    je loader_loaded
+    je loader_loaded    ; No cluster is left to read
 
-    mov ax, 0
-    mov bx, 0
-    mov ax, [SectorsPerCluster]
-    mov bx, 512
-    mul bx
+    ; Move the point to laod next cluster
+    pop si
+    add si, 2048
 
-    ; Move offset to current position
-    mov dx, [loader_offset]
-    add dx, ax
-    mov [loader_offset], dx
-
+    ; Load cluster agin
     jmp load_cluster
+
 load_data:
-    mov ah, 0x0e
-    mov al, "D"
-    int 0x10
-    
+    pusha
+
+    ; Read sectors
+    call get_sector_number
+    call read_sector
+
+    popa
+    ret
+
+; Calculate the sector number
+get_sector_number:
     mov al, cl
     mov bl, 4
     mul bl
     mov dl, al
     add dl, 6
     mov dh, 1
-    mov si, [loader_offset]
-    call read_sector
     ret
 
 loader_loaded:
-    mov ah, 0x0e
-    mov al, "S"
-    int 0x10
+    pop si
     ret

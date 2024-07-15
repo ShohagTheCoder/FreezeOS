@@ -5,7 +5,7 @@ find_file:
     mul bx
     mov cl, al
     add cl, [ReservedSectors]
-    add cl, 1
+    inc cl
     mov dl, cl
 
     mov si, 0x7e00

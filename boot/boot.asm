@@ -41,15 +41,17 @@ start:
     call load_loader
 
 	; Prepare for protected mode
-    call jmp_to_pm
+    jmp jmp_to_pm
 
+    ; Infinite loop
     jmp $
-    
+
 ; Include helper files
 %include "helpers/read_sector.asm"
 %include "helpers/load_fat.asm"
 %include "helpers/find_file.asm"
 %include "helpers/load_loader.asm"
+%include "helpers/print_string.asm"
 %include "helpers/gdt.asm"
 %include "helpers/jmp_to_pm.asm"
 %include "helpers/protected_mode.asm"

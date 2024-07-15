@@ -1,4 +1,5 @@
 ; load_kernel.asm
+section .text
 load_kernel:
     ; Find the file from root directory
     call find_file
@@ -17,8 +18,6 @@ load_cluster:
     push esi
 
     mov esi, fat_location
-    xor eax, eax
-    xor ebx, ebx
     mov eax, 2
     mov ebx, ecx
     mul ebx
@@ -44,14 +43,14 @@ load_data:
 .load_data_loop:
     mov ebx, esi
     call read_sector
-    add ecx, 1
+    inc ecx
     add esi, 512
 
     ; Loop section
     cmp edi, 3
     je .load_data_done
 
-    add edi, 1
+    inc edi
     jmp .load_data_loop
     
 .load_data_done:
