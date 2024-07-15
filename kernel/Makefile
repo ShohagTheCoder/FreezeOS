@@ -25,11 +25,6 @@ CFLAGS				:= -ffreestanding -Wall -nostdlib -m32 -g
 .PHONY: all
 all: $(LOADER_BIN) $(KERNEL_BIN)
 
-# $(LOADER_BIN): $(LOADER_C)
-# 	@mkdir -p $(@D)
-# 	gcc $(CFLAGS) -c $< -o $(LOADER_OBJ)
-# 	ld -T $(LOADER_LD_FILE) -m elf_i386 -o $@ $(LOADER_OBJ)
-
 $(LOADER_BIN): $(LOADER_ASM)
 	@mkdir -p $(@D)
 	nasm -f bin $< -o $@
