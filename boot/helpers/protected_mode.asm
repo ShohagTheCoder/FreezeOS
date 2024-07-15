@@ -11,4 +11,6 @@ protected_mode:
     mov ss, ax           ; Set SS to the data segment
 
     ; Jump to the loader's starting location
-    jmp loader_location ; Call the loader's entry point
+    call loader_location ; Call the loader's entry point
+
+    jmp $

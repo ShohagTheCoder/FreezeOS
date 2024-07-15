@@ -14,10 +14,10 @@ kernel_kernel:
     ; Find the kernel
     call load_kernel
 
-    jmp $
+    ; jmp $
 
     ; Jump to kernel location
-    ; jmp kernel_location
+    call kernel_location
 
     ; mov ecx, 104
     ; mov ebx, kernel_location
@@ -28,27 +28,27 @@ kernel_kernel:
 
 
 
-    mov si, kernel_location
-    mov al, [si]
-    mov byte [0xb8100], al
-    mov byte [0xb8101], 0x5f
-    mov al, [si + 1]
-    mov byte [0xb8102], al
-    mov byte [0xb8103], 0x5f
-    mov al, [si + 2]
-    mov byte [0xb8104], al
-    mov byte [0xb8105], 0x5f
-    mov al, [si + 3]
-    mov byte [0xb8106], al
-    mov byte [0xb8107], 0x5f
-    mov al, [si + 4]
-    mov byte [0xb8108], al
-    mov byte [0xb8109], 0x5f
-    mov al, [si + 5]
-    mov byte [0xb810a], al
-    mov byte [0xb810b], 0x5f
+    ; mov si, kernel_location
+    ; mov al, [si]
+    ; mov byte [0xb8100], al
+    ; mov byte [0xb8101], 0x5f
+    ; mov al, [si + 1]
+    ; mov byte [0xb8102], al
+    ; mov byte [0xb8103], 0x5f
+    ; mov al, [si + 2]
+    ; mov byte [0xb8104], al
+    ; mov byte [0xb8105], 0x5f
+    ; mov al, [si + 3]
+    ; mov byte [0xb8106], al
+    ; mov byte [0xb8107], 0x5f
+    ; mov al, [si + 4]
+    ; mov byte [0xb8108], al
+    ; mov byte [0xb8109], 0x5f
+    ; mov al, [si + 5]
+    ; mov byte [0xb810a], al
+    ; mov byte [0xb810b], 0x5f
 
-    mov esi, kernel_location
+    mov esi, kernel_location + 0x800
     mov ecx, 1000
     call print_string;
 
@@ -78,10 +78,11 @@ print_string:
 section .data
 ; kernel location
 fat_location       equ 0x9000
-kernel_location    equ 0xf000
+kernel_location    equ 0x100000
 
 ; kernel name
-kernel_name db "ONE     TXT", 0
+kernel_name db "KERNEL  BIN", 0
+; kernel_name db "ONE     TXT", 0
 
 
 ; File system data

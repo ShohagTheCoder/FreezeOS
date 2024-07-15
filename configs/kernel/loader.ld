@@ -1,7 +1,7 @@
-ENTRY(kernel_entry)
+ENTRY(load_kernel)
 SECTIONS
 {
-    . = 0x100000; 
+    . = 0xa000; 
     .text :
     {
         *(.text)

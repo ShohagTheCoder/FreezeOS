@@ -11,7 +11,9 @@ global kernel_entry
 kernel_entry:
 
     mov byte [0xb8000], 'K'
-    mov byte [0xb8001], 0x4f
+    mov byte [0xb8001], 0x2f
+    mov byte [0xb8002], 'E'
+    mov byte [0xb8003], 0x4f
 
     call kernel         ; Call the kernel
 

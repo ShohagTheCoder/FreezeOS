@@ -1,11 +1,9 @@
 ; load_kernel.asm
-section .text
 load_kernel:
     ; Find the file from root directory
     call find_file
 
     ; Move the cluster number on cx register
-    ; add eax, 1
     mov ecx, eax
     mov esi, kernel_location
 
@@ -32,14 +30,10 @@ load_cluster:
     je kernel_loaded
 
     mov eax, ecx
-    ; mov eax, 10
     pop esi
-    call load_data
-    ; add esi, 2048
-    ; call load_data
+    add esi, 2048
 
     jmp load_cluster
-    ; ret
 load_data:
     pusha
     mov edi, 0
@@ -65,30 +59,7 @@ load_data:
     ret
 
 kernel_loaded:
-    mov byte [0xb80fa], 'Z'
-    mov byte [0xb80fb], 0x2f
-
-    mov si, 0xf000
-    mov al, [si]
-    mov byte [0xb8100], al
-    mov byte [0xb8101], 0x5f
-    mov al, [si + 1]
-    mov byte [0xb8102], al
-    mov byte [0xb8103], 0x5f
-    mov al, [si + 2]
-    mov byte [0xb8104], al
-    mov byte [0xb8105], 0x5f
-    mov al, [si + 3]
-    mov byte [0xb8106], al
-    mov byte [0xb8107], 0x5f
-    mov al, [si + 4]
-    mov byte [0xb8108], al
-    mov byte [0xb8109], 0x5f
-    mov al, [si + 5]
-    mov byte [0xb810a], al
-    mov byte [0xb810b], 0x5f
-
-    jmp $
+    pop esi
     ret
 
 ; Get sector number

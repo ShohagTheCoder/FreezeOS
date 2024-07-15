@@ -43,11 +43,8 @@ start:
 	; Prepare for protected mode
     call jmp_to_pm
 
-; Infinite loop to hang the system
-hang:
-    hlt                 ; Halt the CPU
-    jmp hang            ; Jump to the hang label, creating an infinite loop
-
+    jmp $
+    
 ; Include helper files
 %include "helpers/read_sector.asm"
 %include "helpers/load_fat.asm"
