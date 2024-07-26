@@ -37,15 +37,16 @@ DirEntry_t empty_entry = {.extra = {0},
                           .first_cluster_low = 0,
                           .size = 0};
 
+uint32_t fat_start = RESERVED_SECTORS;
+uint32_t root_entries_start = RESERVED_SECTORS + (SECTORS_PER_FAT * 2);
+
 void load_root_entries()
 {
-    uint32_t root_entries_start = RESERVED_SECTORS + (SECTORS_PER_FAT * 2);
     read_sectors((uint8_t*)root_entries, root_entries_start, 1);
 }
 
 void load_fat()
 {
-    uint32_t fat_start = RESERVED_SECTORS;
     read_sectors((uint8_t*)fat, fat_start, 1);
 }
 
@@ -116,4 +117,68 @@ void* file_read(char* name, char* ext)
     load_file(buffer, file);
     // Return buffer
     return buffer;
+}
+
+char* fz_make_fat16_file_name(char name[])
+{
+    // if (strlen(name) > 8)
+    // {
+    //     /* code */
+    // }
+    // else if (strlen(name) < 8)
+    // {
+    // }
+    // else
+    // {
+    //     return name
+    // }
+}
+
+void fz_create_file(char name[], char extension[])
+{
+    int index = 0;
+    // Find empty file entry
+    for (int i = 0; i < 255; i++)
+    {
+        if (root_entries[i].first_cluster_low == 0)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    // Find emty cluster chain
+    int cluster_position = 0;
+    for (int i = 3; i < 512; i++)
+    {
+        if (fat[i].position == 0)
+        {
+            cluster_position = i;
+            break;
+        }
+    }
+
+    print_int(cluster_position);
+
+    // Save file informations
+    root_entries[index] = (DirEntry_t){
+        .extra = "--------------------------------",
+        .name = "        ",
+        .extension = "   ",
+        .attribute = 1,
+        .first_cluster_high = 0,
+        .first_cluster_low = cluster_position,
+        .size = 0,
+    };
+
+    // Update fat
+    fat[cluster_position].position = 0xFFFF;
+
+    // Copy contents
+    fz_substr(name, root_entries[index].name, 0, 8);
+    fz_substr(extension, root_entries[index].extension, 0, 3);
+
+    // Write with new entry data
+    fz_write_sector(fat, fat_start);
+    fz_write_sector(root_entries, root_entries_start);
 }

@@ -7,6 +7,7 @@
 #define ATA_PRIMARY_CONTROL 0x3F6
 #define ATA_MASTER 0xA0
 #define ATA_SLAVE 0xB0
+#define ATA_ERROR 0x01
 #define ATA_SECTOR_COUNT 0x02
 #define ATA_SECTOR_NUMBER 0x03
 #define ATA_CYLINDER_LOW 0x04
@@ -18,8 +19,9 @@
 #define ATA_STATUS_BUSY 0x80
 #define ATA_STATUS_DRQ 0x08
 #define ATA_CMD_READ_PIO 0x20
+#define ATA_CMD_WRITE_PIO 0x30
 
-static inline void insl(uint16_t port, void* address, int cnt)
+static inline void insl(uint16_t port, const void* address, uint32_t cnt)
 {
     asm volatile("cld; rep insl"
                  : "=D"(address), "=c"(cnt)
@@ -27,7 +29,20 @@ static inline void insl(uint16_t port, void* address, int cnt)
                  : "memory", "cc");
 }
 
+static inline void outsl(uint16_t port, const void* address, uint32_t cnt)
+{
+    asm volatile("cld; rep outsl"
+                 : "=S"(address), "=c"(cnt)
+                 : "d"(port), "0"(address), "1"(cnt)
+                 : "memory", "cc");
+}
+
 void ata_wait_busy()
+{
+    while (inb(ATA_PRIMARY_IO + ATA_STATUS) & ATA_STATUS_BUSY)
+        ;
+}
+void ata_wait_ready()
 {
     while (inb(ATA_PRIMARY_IO + ATA_STATUS) & ATA_STATUS_BUSY)
         ;
@@ -56,11 +71,50 @@ void read_sector(uint8_t* buffer, uint32_t lba)
     insl(ATA_PRIMARY_IO + ATA_DATA, buffer, 256);  // 256 Words
 }
 
+void fz_write_sector(uint8_t* buffer, uint32_t lba)
+{
+    ata_wait_ready();
+    // outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
+
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, 1);
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (uint8_t)lba);
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (uint8_t)(lba >> 8));
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (uint8_t)(lba >> 16));
+    outb(ATA_PRIMARY_IO + ATA_DRIVE_SELECT, 0xE0 | ((lba >> 24) & 0x0F));
+    outb(ATA_PRIMARY_IO + ATA_COMMAND, ATA_CMD_WRITE_PIO);
+
+    ata_wait_drq();
+
+    // for (int i = 0; i < 256; i++)
+    // {
+    //     outw(ATA_PRIMARY_IO + ATA_DATA, ((uint16_t*)buffer)[i]);
+    // }
+
+    outsl(ATA_PRIMARY_IO + ATA_DATA, buffer, 256);  // 256 Words
+
+    ata_wait_ready();
+
+    uint8_t status = inb(ATA_PRIMARY_IO + ATA_STATUS);
+    if (status & ATA_ERROR)
+    {
+        print_str("Somethis went wrong in fz_write_sector");
+    }
+}
+
 void read_sectors(uint8_t* buffer, uint32_t lba, uint8_t sector_count)
 {
     for (uint8_t i = 0; i < sector_count; i++)
     {
         read_sector(buffer, lba + i);
+        buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
+    }
+}
+
+void fz_write_sectors(uint8_t* buffer, uint32_t lba, uint8_t sector_count)
+{
+    for (uint8_t i = 0; i < sector_count; i++)
+    {
+        fz_write_sector(buffer, lba + i);
         buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
     }
 }

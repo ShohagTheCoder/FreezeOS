@@ -26,4 +26,6 @@ void kernel()
 
     // Initialize shell
     shell_init();
+
+    fz_create_file("HI MY", "Bi");
 }

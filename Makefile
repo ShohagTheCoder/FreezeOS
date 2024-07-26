@@ -22,8 +22,9 @@ $(ISO_FILE): kernel
 	sudo mount -o loop $@ $(MOUNT_POINT)
 	sudo cp $(LOADER_BIN) $(MOUNT_POINT)
 	sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
-	sudo cp one.txt $(MOUNT_POINT)
-	sudo cp two.txt $(MOUNT_POINT)
+# sudo cp one.txt $(MOUNT_POINT)
+# sudo cp two.txt $(MOUNT_POINT)
+# sudo cp kernel/io.c $(MOUNT_POINT)
 	sudo umount $(MOUNT_POINT)
 
 kernel:

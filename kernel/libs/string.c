@@ -173,3 +173,43 @@ int count_digits(int n)
 
     return count;
 }
+
+void fz_strcpy(char* src, char* dest)
+{
+    while (*src)
+    {
+        *dest = *src;
+        *src++;
+        *dest++;
+    }
+}
+
+void fz_fill_spaces(char* str, int end)
+{
+    int start = strlen(str);
+    for (start; start < end; start++)
+    {
+        str[start] = ' ';
+    }
+
+    str[end] = '\0';
+}
+
+void fz_substr(char str[], char* substr, int start, int count)
+{
+    count += start;
+    int index = start;
+    for (start; start < count; start++)
+    {
+        if (str[start] == '\0')
+        {
+            substr[start - index] = ' ';
+        }
+        else
+        {
+            substr[start - index] = str[start];
+        }
+    }
+
+    substr[count - index] = '\0';
+}

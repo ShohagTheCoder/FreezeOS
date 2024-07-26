@@ -4,6 +4,8 @@
 #include "../includes/shell.h"
 #include "../includes/string.h"
 
+#define KiB 1042
+
 void command_help()
 {
     print_str("List of commands:");
@@ -41,8 +43,16 @@ void command_ls()
             print_str(" | ");
             print_str_in((char*)entry.extension, 3);
             print_str(" | ");
-            print_int(entry.size);
-            print_str(" (char)");
+            if (entry.size < KiB)
+            {
+                print_int(entry.size);
+                print_str(" byte");
+            }
+            else
+            {
+                print_int(entry.size / KiB);
+                print_str(" KiB");
+            }
             put_nl();
         }
     }

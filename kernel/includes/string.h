@@ -15,5 +15,8 @@ int str_remove(char str[]);
 int str_cmp(char* str1, char* str2);
 int str_cmp_in(char* str1, char* str2, int count);
 void reset_str(char* str);
+void fz_substr(char str[], char* substr, int start, int count);
+void fz_strcpy(char* src, char* dest);
+void fz_fill_spaces(char* str, int end);
 
 #endif
