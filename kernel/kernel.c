@@ -26,4 +26,7 @@ void kernel()
 
     // Initialize shell
     shell_init();
+
+    DirEntry_t file = find_file("one", "txt");
+    fz_fdelete(file);
 }

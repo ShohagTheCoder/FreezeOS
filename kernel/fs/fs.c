@@ -265,3 +265,19 @@ void fz_fappend(DirEntry_t file, char* data)
     // fz_write_sector((uint8_t*)fat, fat_start);
     fz_write_sector((uint8_t*)root_entries, root_entries_start);
 }
+
+void fz_fdelete(DirEntry_t file)
+{
+    int file_index = get_file_index_in_root_directories(file);
+    root_entries[file_index] = empty_entry;
+    ClusterChain_t current_cluster = file.first_cluster_low;
+    while (current_cluster != 0xFFFF)
+    {
+        ClusterChain_t next_culster = fat[current_cluster];
+        fat[current_cluster] = 0;
+        current_cluster = next_culster;
+    }
+
+    fz_write_sector((uint8_t*)fat, fat_start);
+    fz_write_sector((uint8_t*)root_entries, root_entries_start);
+}
