@@ -13,5 +13,6 @@ void load_cluster(uint8_t* buffer, uint32_t lba);
 
 void fz_write_sector(uint8_t* buffer, uint32_t lba);
 void fz_write_sectors(uint8_t* buffer, uint32_t lba, uint8_t sector_count);
+void write_cluster(uint8_t* buffer, uint32_t lba);
 
 #endif

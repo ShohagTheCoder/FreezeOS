@@ -17,6 +17,17 @@ int str_cmp_in(char* str1, char* str2, int count);
 void reset_str(char* str);
 void fz_substr(char str[], char* substr, int start, int count);
 void fz_strcpy(char* src, char* dest);
+void fz_strncpy(char* src, char* dest, int count);
+void fz_strcpy_max(char* src, char* dest, uint32_t max);
 void fz_fill_spaces(char* str, int end);
+void fz_to_uppercase(char* str);
+void fz_to_lowercase(char* str);
+
+char* fz_strchr(const char* str, int c);
+char* fz_strpbrk(const char* str, const char* accept);
+size_t fz_strspn(const char* str, char* accept);
+char* fz_strtok(char* str, const char* delim);
+
+void fz_strsplit(char* str, char** pointers, char* delim);
 
 #endif

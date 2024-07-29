@@ -42,6 +42,9 @@ void shell(char c)
 
 void execute_command(char buffer[])
 {
+    char* commnads[5];
+    fz_strsplit(buffer, commnads, " ");
+
     if (str_cmp("help", buffer))
     {
         command_help();
@@ -54,9 +57,21 @@ void execute_command(char buffer[])
     {
         command_ls();
     }
+    else if (str_cmp("touch", buffer))
+    {
+        command_touch(commnads);
+    }
     else if (str_cmp("cat", buffer))
     {
-        command_cat();
+        command_cat(commnads);
+    }
+    else if (str_cmp("sizeof", buffer))
+    {
+        command_sizeof(commnads);
+    }
+    else if (str_cmp("dump", buffer))
+    {
+        command_dump(commnads);
     }
     else
     {

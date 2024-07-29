@@ -3,10 +3,7 @@
 
 #include "types.h"
 
-typedef struct
-{
-    uint16_t position;
-} ClusterChain_t;
+typedef uint16_t ClusterChain_t;
 
 typedef struct
 {
@@ -41,7 +38,9 @@ uint16_t get_next_cluster_number(uint16_t current_cluster);
 
 void* file_read(char* name, char* ext);
 
+char* fz_make_fat16_file_name(char* name, char* extension);
 void fz_create_file(char name[], char extension[]);
-// void fz_create_file(char* name, char* extension);
+
+void fz_fappend(DirEntry_t file, char* data);
 
 #endif

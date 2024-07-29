@@ -178,18 +178,34 @@ void fz_strcpy(char* src, char* dest)
 {
     while (*src)
     {
-        *dest = *src;
-        *src++;
-        *dest++;
+        *dest++ = *src++;
+    }
+}
+
+void fz_strncpy(char* src, char* dest, int count)
+{
+    while (count > 0)
+    {
+        *dest++ = *src++;
+        count--;
+    }
+}
+
+void fz_strcpy_max(char* src, char* dest, uint32_t max)
+{
+    while (*src && max)
+    {
+        *dest++ = *src++;
+        max--;
     }
 }
 
 void fz_fill_spaces(char* str, int end)
 {
     int start = strlen(str);
-    for (start; start < end; start++)
+    for (int i = start; i < end; i++)
     {
-        str[start] = ' ';
+        str[i] = ' ';
     }
 
     str[end] = '\0';
@@ -199,17 +215,142 @@ void fz_substr(char str[], char* substr, int start, int count)
 {
     count += start;
     int index = start;
-    for (start; start < count; start++)
+    for (int i = start; i < count; i++)
     {
-        if (str[start] == '\0')
+        if (str[i] == '\0')
         {
-            substr[start - index] = ' ';
+            substr[i - index] = ' ';
         }
         else
         {
-            substr[start - index] = str[start];
+            substr[i - index] = str[i];
         }
     }
 
     substr[count - index] = '\0';
+}
+
+void fz_to_uppercase(char* str)
+{
+    while (*str)
+    {
+        if (*str >= 'a' && *str <= 'z')
+        {
+            *str -= 32;
+        }
+        str++;
+    }
+}
+
+void fz_to_lowercase(char* str)
+{
+    while (*str)
+    {
+        if (*str >= 'A' && *str <= 'Z')
+        {
+            *str += 32;
+        }
+        str++;
+    }
+}
+
+char* fz_strchr(const char* str, int c)
+{
+    while (*str)
+    {
+        if (*str == (char)c)
+        {
+            return (char*)str;
+        }
+        str++;
+    }
+    return NULL;
+}
+
+char* fz_strpbrk(const char* str, const char* accept)
+{
+    while (*str)
+    {
+        const char* a = accept;
+        while (*a)
+        {
+            if (*a == *str)
+            {
+                return (char*)str;
+            }
+            a++;
+        }
+        str++;
+    }
+    return NULL;
+}
+
+size_t fz_strspn(const char* str, char* accept)
+{
+    const char* p;
+    const char* a;
+    size_t count = 0;
+
+    for (p = str; *p != '\0'; p++)
+    {
+        for (a = accept; *a != '\0'; a++)
+        {
+            if (*a == *p)
+            {
+                count++;
+                break;
+            }
+        }
+    }
+
+    return count;
+}
+
+char* fz_strtok(char* str, const char* delim)
+{
+    static char* last;
+    if (str == NULL)
+    {
+        str = last;
+    }
+
+    if (str == NULL)
+    {
+        return NULL;
+    }
+
+    // str += fz_strspn(str, delim);  // Skip leading dilimiters
+
+    // if (*str == '\0')
+    // {
+    //     return NULL;
+    // }
+
+    char* token = str;
+    str = fz_strpbrk(str, delim);
+
+    if (str)
+    {
+        *str = '\0';
+        last = str + 1;
+    }
+    else
+    {
+        last = NULL;
+    }
+
+    return token;
+}
+
+void fz_strsplit(char* str, char** pointers, char* delim)
+{
+    char* token = fz_strtok(str, delim);
+    int count = 0;
+
+    while (token != NULL)
+    {
+        pointers[count] = token;
+        count++;
+        token = fz_strtok(NULL, delim);
+    }
 }

@@ -151,3 +151,12 @@ void load_cluster(uint8_t* buffer, uint32_t lba)
         buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
     }
 }
+
+void write_cluster(uint8_t* buffer, uint32_t lba)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        fz_write_sector(buffer, lba + i);
+        buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
+    }
+}

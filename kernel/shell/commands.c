@@ -58,18 +58,46 @@ void command_ls()
     }
 }
 
-void command_cat()
-{
-    char* file = file_read("ONE     ", "TXT");
-    print_str(file);
-    mem_free(file);
-    put_nl();
-}
-
 void command_unknown(char buffer[])
 {
     print_str("The command '");
     print_str(buffer);
     print_str("' is unknown.");
+    put_nl();
+}
+
+void command_touch(char** cmds)
+{
+    fz_to_uppercase(cmds[1]);
+    fz_to_uppercase(cmds[2]);
+    fz_create_file(cmds[1], cmds[2]);
+    put_nl();
+}
+
+void command_cat(char** cmds)
+{
+    DirEntry_t file = find_file(cmds[1], cmds[2]);
+
+    fz_fappend(file, cmds[3]);
+    print_str("Data append successfully on file : ");
+    print_str(cmds[1]);
+    putchar('.');
+    s(cmds[2]);
+}
+
+void command_sizeof(char** cmds)
+{
+    DirEntry_t file = find_file(cmds[1], cmds[2]);
+    print_str("File name : ");
+    s((char*)file.name);
+    d("File size", (int)file.size);
+}
+void command_dump(char** cmds)
+{
+    DirEntry_t file = find_file(cmds[1], cmds[2]);
+    char* buffer = mem_alloc(file.size);
+    load_file(buffer, file);
+    print_str("File Contents : ");
+    print_str_in(buffer, file.size);
     put_nl();
 }

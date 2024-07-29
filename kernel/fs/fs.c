@@ -18,6 +18,7 @@
 #define SECTOR_SIZE 512
 #define CLUSTER_SIZE 4 * SECTOR_SIZE
 #define DATA_SECTOR_START 68
+#define END_OF_CLUSTER 0xFFFF
 
 DirEntry_t root_entries[256];
 ClusterChain_t fat[512];
@@ -52,10 +53,16 @@ void load_fat()
 
 DirEntry_t find_file(char name[], char extension[])
 {
+    char* fname = "           ";
+    char* fextension = "   ";
+    fz_to_uppercase(name);
+    fz_to_uppercase(extension);
+    fz_strcpy_max(name, fname, 8);
+    fz_strcpy_max(extension, fextension, 3);
     for (int i = 0; i < 256; i++)
     {
-        if (str_cmp_in(name, (char*)root_entries[i].name, 8) &&
-            str_cmp_in(extension, (char*)root_entries[i].extension, 3))
+        if (str_cmp_in(fname, (char*)root_entries[i].name, 8) &&
+            str_cmp_in(fextension, (char*)root_entries[i].extension, 3))
         {
             return root_entries[i];
         }
@@ -119,19 +126,15 @@ void* file_read(char* name, char* ext)
     return buffer;
 }
 
-char* fz_make_fat16_file_name(char name[])
+char* fz_make_fat16_file_name(char* name, char* extension)
 {
-    // if (strlen(name) > 8)
-    // {
-    //     /* code */
-    // }
-    // else if (strlen(name) < 8)
-    // {
-    // }
-    // else
-    // {
-    //     return name
-    // }
+    char* full_name = "           ";  // 11 characters name (name + extension)
+    fz_to_uppercase(name);
+    fz_to_uppercase(extension);
+    fz_strcpy_max(name, full_name, 8);
+    fz_strcpy_max(extension, full_name + 8, 3);
+    // Return the new name
+    return full_name;
 }
 
 void fz_create_file(char name[], char extension[])
@@ -151,14 +154,12 @@ void fz_create_file(char name[], char extension[])
     int cluster_position = 0;
     for (int i = 3; i < 512; i++)
     {
-        if (fat[i].position == 0)
+        if (fat[i] == 0)
         {
             cluster_position = i;
             break;
         }
     }
-
-    print_int(cluster_position);
 
     // Save file informations
     root_entries[index] = (DirEntry_t){
@@ -172,13 +173,95 @@ void fz_create_file(char name[], char extension[])
     };
 
     // Update fat
-    fat[cluster_position].position = 0xFFFF;
+    fat[cluster_position] = 0xFFFF;
 
     // Copy contents
-    fz_substr(name, root_entries[index].name, 0, 8);
-    fz_substr(extension, root_entries[index].extension, 0, 3);
+    fz_strcpy_max(name, (char*)root_entries[index].name, 8);
+    fz_strcpy_max(extension, (char*)root_entries[index].extension, 3);
 
     // Write with new entry data
-    fz_write_sector(fat, fat_start);
-    fz_write_sector(root_entries, root_entries_start);
+    fz_write_sector((uint8_t*)fat, fat_start);
+    fz_write_sector((uint8_t*)root_entries, root_entries_start);
+
+    // File created successfully
+    print_str("File created successfully");
+}
+
+int get_file_index_in_root_directories(DirEntry_t file)
+{
+    int index = -1;
+    for (int i = 0; i < 20; i++)
+    {
+        if (str_cmp_in(file.name, root_entries[i].name, 8) &&
+            str_cmp_in(file.extension, root_entries[i].extension, 3))
+        {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+}
+
+void fz_fappend(DirEntry_t file, char* data)
+{
+    // Variables
+    int clusters_to_write = 0;
+    int data_length = strlen(data);
+    int size = file.size;
+    ClusterChain_t last_cluster = file.first_cluster_low;
+    ClusterChain_t end_cluster = 0;
+    int file_clusters = 0;
+
+    int xs = size;
+    // Find last sector
+    while (xs >= CLUSTER_SIZE)
+    {
+        file_clusters++;
+        xs -= CLUSTER_SIZE;
+    }
+
+    // Find how many sectors to write
+    int last_data_offset = xs;
+    xs += data_length;
+    while (xs > 0)
+    {
+        clusters_to_write++;
+        xs -= CLUSTER_SIZE;
+    }
+
+    end_cluster = fat[last_cluster];
+    while (end_cluster != END_OF_CLUSTER)
+    {
+        last_cluster = end_cluster;
+        end_cluster = fat[last_cluster];
+    }
+
+    // Read last cluster
+    char* buffer = mem_alloc(SECTOR_SIZE * clusters_to_write);
+    load_cluster((uint8_t*)buffer, 116);
+    fz_strncpy(data, buffer + last_data_offset, data_length);
+
+    // Write back last cluster with new data
+    write_cluster((uint8_t*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
+
+    // // Write new clusters if available
+    // for (int i = 1; i < clusters_to_write; i++)
+    // {
+    //     write_cluster((uint8_t*)buffer + (i * CLUSTER_SIZE),
+    //                   DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER) +
+    //                       (i * SECTORS_PER_CLUSTER));
+    // }
+
+    // Make free the memory
+    mem_free(buffer);
+
+    int file_index = get_file_index_in_root_directories(file);
+
+    // Update file and cluster chain
+    root_entries[file_index].size += data_length;
+
+    // Write with new entry data
+    // fz_write_sector((uint8_t*)fat, fat_start);
+    fz_write_sector((uint8_t*)root_entries, root_entries_start);
 }
