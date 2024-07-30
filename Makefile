@@ -23,8 +23,11 @@ $(ISO_FILE): kernel
 	sudo cp $(LOADER_BIN) $(MOUNT_POINT)
 	sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
 	sudo cp one.txt $(MOUNT_POINT)
-	sudo cp two.txt $(MOUNT_POINT)
-# sudo cp kernel/io.c $(MOUNT_POINT)
+# sudo cp two.txt $(MOUNT_POINT)
+
+# sudo cp logs/errors.txt $(MOUNT_POINT)
+# sudo cp logs/warnings.txt $(MOUNT_POINT)
+# sudo cp logs/info.txt $(MOUNT_POINT)
 	sudo umount $(MOUNT_POINT)
 
 kernel:

@@ -18,7 +18,7 @@ void reset_str(char* str);
 void fz_substr(char str[], char* substr, int start, int count);
 void fz_strcpy(char* src, char* dest);
 void fz_strncpy(char* src, char* dest, int count);
-void fz_strcpy_max(char* src, char* dest, uint32_t max);
+void fz_strcpy_max(char* src, char* dest, int max);
 void fz_fill_spaces(char* str, int end);
 void fz_to_uppercase(char* str);
 void fz_to_lowercase(char* str);

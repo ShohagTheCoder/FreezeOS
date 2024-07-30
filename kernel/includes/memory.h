@@ -13,5 +13,6 @@ typedef struct dynamic_mem_node
 
 void* mem_alloc(size_t size);
 void mem_free(void* ptr);
+void memset(char* ptr, char c, int count);
 
 #endif

@@ -3,6 +3,7 @@
 #include "includes/fs.h"
 #include "includes/idt.h"
 #include "includes/keyboard.h"
+#include "includes/logs.h"
 #include "includes/memory.h"
 #include "includes/shell.h"
 #include "includes/string.h"
@@ -26,7 +27,4 @@ void kernel()
 
     // Initialize shell
     shell_init();
-
-    DirEntry_t file = find_file("one", "txt");
-    fz_fdelete(file);
 }

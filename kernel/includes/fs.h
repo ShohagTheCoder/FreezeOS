@@ -41,7 +41,7 @@ void* file_read(char* name, char* ext);
 char* fz_make_fat16_file_name(char* name, char* extension);
 void fz_create_file(char name[], char extension[]);
 
-void fz_fappend(DirEntry_t file, char* data);
+void fz_fappend(DirEntry_t file, char* data, int length);
 void fz_fdelete(DirEntry_t file);
 
 #endif

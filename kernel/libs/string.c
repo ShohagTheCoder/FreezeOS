@@ -1,6 +1,8 @@
 #include "../includes/string.h"
 #include "../includes/console.h"
 
+static char* ptr;
+
 /**
  * @brief Counts the number of character in the string.
  *
@@ -184,19 +186,25 @@ void fz_strcpy(char* src, char* dest)
 
 void fz_strncpy(char* src, char* dest, int count)
 {
+    if (dest == NULL)
+    {
+        dest = ptr;
+    }
+
     while (count > 0)
     {
         *dest++ = *src++;
         count--;
     }
+
+    ptr = dest;
 }
 
-void fz_strcpy_max(char* src, char* dest, uint32_t max)
+void fz_strcpy_max(char* src, char* dest, int max)
 {
-    while (*src && max)
+    while (*src && max--)
     {
         *dest++ = *src++;
-        max--;
     }
 }
 

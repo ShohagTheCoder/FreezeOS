@@ -1,11 +1,12 @@
 #include "../includes/memory.h"
 
 #define NULL_POINTER ((void*)0)
-#define DYNAMIC_MEM_TOTAL_SIZE 4 * 1024
+#define DYNAMIC_MEM_TOTAL_SIZE (4 * 1024)
 #define DYNAMIC_MEM_NODE_SIZE sizeof(dynamic_mem_node_t)  // 16
 
 static uint8_t dynamic_mem_area[DYNAMIC_MEM_TOTAL_SIZE];
 static dynamic_mem_node_t* dynamic_mem_start;
+static char* saved_ptr;
 
 // Initialize dynamic memory
 void init_dynamic_mem()
@@ -14,9 +15,10 @@ void init_dynamic_mem()
     dynamic_mem_start->size = DYNAMIC_MEM_TOTAL_SIZE - DYNAMIC_MEM_NODE_SIZE;
     dynamic_mem_start->prev = NULL_POINTER;
     dynamic_mem_start->next = NULL_POINTER;
+    dynamic_mem_start->used = false;  // Initialize the used member
 }
 
-void* find_best_mem_block(dynamic_mem_node_t* dynamic_mem, size_t size)
+dynamic_mem_node_t* find_best_mem_block(dynamic_mem_node_t* dynamic_mem, size_t size)
 {
     dynamic_mem_node_t* best_mem_block = (dynamic_mem_node_t*)NULL_POINTER;
     uint32_t best_mem_block_size = DYNAMIC_MEM_TOTAL_SIZE + 1;
@@ -36,15 +38,15 @@ void* find_best_mem_block(dynamic_mem_node_t* dynamic_mem, size_t size)
     return best_mem_block;
 }
 
-void* merge_next_node_into_current(dynamic_mem_node_t* current_mem_node)
+dynamic_mem_node_t* merge_next_node_into_current(dynamic_mem_node_t* current_mem_node)
 {
     dynamic_mem_node_t* next_mem_node = current_mem_node->next;
     if (next_mem_node != NULL_POINTER && !next_mem_node->used)
     {
-        current_mem_node->size += current_mem_node->next->size;
+        current_mem_node->size += next_mem_node->size;
         current_mem_node->size += DYNAMIC_MEM_NODE_SIZE;
 
-        current_mem_node->next = current_mem_node->next->next;
+        current_mem_node->next = next_mem_node->next;
         if (current_mem_node->next != NULL_POINTER)
         {
             current_mem_node->next->prev = current_mem_node;
@@ -73,8 +75,7 @@ void merge_current_node_into_previous(dynamic_mem_node_t* current_mem_node)
 
 void* mem_alloc(size_t size)
 {
-    dynamic_mem_node_t* best_mem_block =
-        (dynamic_mem_node_t*)find_best_mem_block(dynamic_mem_start, size);
+    dynamic_mem_node_t* best_mem_block = find_best_mem_block(dynamic_mem_start, size);
 
     if (best_mem_block != NULL_POINTER)
     {
@@ -119,4 +120,12 @@ void mem_free(void* ptr)
 
     current_mem_node = merge_next_node_into_current(current_mem_node);
     merge_current_node_into_previous(current_mem_node);
+}
+
+void memset(char* ptr, char c, int count)
+{
+    while (count--)
+    {
+        *ptr++ = c;
+    }
 }

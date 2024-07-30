@@ -78,7 +78,7 @@ void command_cat(char** cmds)
 {
     DirEntry_t file = find_file(cmds[1], cmds[2]);
 
-    fz_fappend(file, cmds[3]);
+    fz_fappend(file, cmds[3], NULL);
     print_str("Data append successfully on file : ");
     print_str(cmds[1]);
     putchar('.');
