@@ -113,53 +113,34 @@ void itoa(int num, char* str, int base)
     strrev(str);
 }
 
-// Function to convert an integer to its ASCII representation
-void int_to_ascii(int n, char str[])
+// Compare a string
+int strcmp(const char* a, const char* b)
 {
-    // Counts of the digits
-    int counts = count_digits(n);
-
-    // Handle negative numbers
-    if (n < 0)
+    while (*a && (*a == *b))
     {
-        n = -n;
-        str[0] = '-';
-        counts++;
+        a++;
+        b++;
     }
 
-    // Set null terminate to the end of string
-    str[counts] = '\0';
-
-    // Generate digits
-    do
-    {
-        str[--counts] = n % 10 + '0';  // Convert each digit to ASCII
-        n /= 10;
-    } while (n > 0);
+    return *(unsigned char*)a - *(unsigned char*)b;
 }
 
-int str_cmp_in(char* str1, char* str2, int count)
+// Compare string for maximum n times
+int strncmp(const char* a, const char* b, size_t n)
 {
-    while (count && *str1 && (*str1 == *str2))
+    while (n && *a && (*a == *b))
     {
-        count--;
-        str1++;
-        str2++;
+        a++;
+        b++;
+        n--;
     }
-    return count == 0 ? 1 : 0;
-}
 
-int str_cmp(char* str1, char* str2)
-{
-    int count = strlen(str1);
-
-    while (count && *str1 && (*str1 == *str2))
+    if (n == 0)
     {
-        count--;
-        str1++;
-        str2++;
+        return 0;
     }
-    return count == 0 ? 1 : 0;
+
+    return *(unsigned char*)a - *(unsigned char*)b;
 }
 
 void reset_str(char* str)
@@ -204,7 +185,7 @@ void print_int(int n)
     // Create a empty array with length equal to the counts of the number to
     // hold the returen string
     char str[count_digits(n)];
-    int_to_ascii(n, str);
+    itoa(n, str, 10);
 
     // Assuming you have a function to print strings to the screen
     print_str(str);  // Replace with your screen output function
@@ -256,7 +237,7 @@ char* strcpy(char* dest, const char* src)
     {
         *dest++ = *src++;
     }
-    *dest = "\0";
+    *dest = '\0';
     return ret;
 }
 

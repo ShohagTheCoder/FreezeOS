@@ -45,31 +45,31 @@ void execute_command(char buffer[])
     char* commnads[5];
     fz_strsplit(buffer, commnads, " ");
 
-    if (str_cmp("help", buffer))
+    if (strcmp("help", buffer))
     {
         command_help();
     }
-    else if (str_cmp("clear", buffer))
+    else if (strcmp("clear", buffer))
     {
         clear_screen();
     }
-    else if (str_cmp("ls", buffer))
+    else if (strcmp("ls", buffer))
     {
         command_ls();
     }
-    else if (str_cmp("touch", buffer))
+    else if (strcmp("touch", buffer))
     {
         command_touch(commnads);
     }
-    else if (str_cmp("cat", buffer))
+    else if (strcmp("cat", buffer))
     {
         command_cat(commnads);
     }
-    else if (str_cmp("sizeof", buffer))
+    else if (strcmp("sizeof", buffer))
     {
         command_sizeof(commnads);
     }
-    else if (str_cmp("dump", buffer))
+    else if (strcmp("dump", buffer))
     {
         command_dump(commnads);
     }

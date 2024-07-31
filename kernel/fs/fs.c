@@ -62,8 +62,8 @@ DirEntry_t find_file(char* name, char* extension)
 
     for (int i = 0; i < 256; i++)
     {
-        if (str_cmp_in(fname, (char*)root_entries[i].name, 8) &&
-            str_cmp_in(fextension, (char*)root_entries[i].extension, 3))
+        if (strncmp(fname, (char*)root_entries[i].name, 8) &&
+            strncmp(fextension, (char*)root_entries[i].extension, 3))
         {
             return root_entries[i];
         }
@@ -81,7 +81,7 @@ uint32_t get_sector_number(int current_cluster, int add)
     return DATA_SECTOR_START + (current_cluster * 4) + add;
 }
 
-void load_file(uint8_t* buffer, DirEntry_t file)
+void load_file(char* buffer, DirEntry_t file)
 {
     uint32_t size = (uint32_t)file.size;
     uint8_t current_cluster_number = file.first_cluster_low;
@@ -189,8 +189,8 @@ int get_file_index_in_root_directories(DirEntry_t file)
     int index = -1;
     for (int i = 0; i < 20; i++)
     {
-        if (str_cmp_in(file.name, root_entries[i].name, 8) &&
-            str_cmp_in(file.extension, root_entries[i].extension, 3))
+        if (strncmp((const char*)file.name, (const char*)root_entries[i].name, 8) &&
+            strncmp((const char*)file.extension, (const char*)root_entries[i].extension, 3))
         {
             index = i;
             break;
