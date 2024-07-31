@@ -11,9 +11,9 @@ void shell_init()
     keyboard_bind(&shell);
     clear_screen();
     hr();
-    print_str("Welcome to FreezeOS v1.0.3");
+    puts("Welcome to FreezeOS v1.0.3");
     hr();
-    print_str("> ");
+    puts("> ");
 }
 
 void shell(char c)
@@ -29,7 +29,7 @@ void shell(char c)
     {
         put_nl();
         execute_command(shell_buffer);
-        print_str("> ");
+        puts("> ");
     }
     else
     {

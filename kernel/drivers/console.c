@@ -115,23 +115,3 @@ void clear_screen()
     cursor_row = 0;
     move_cursor();
 }
-
-void s(char* str)
-{
-    print_str(str);
-    put_nl();
-}
-
-void n(int n)
-{
-    print_int(n);
-    putchar(' ');
-}
-
-void d(char* str, int n)
-{
-    print_str(str);
-    print_str(" : ");
-    print_int(n);
-    put_nl();
-}

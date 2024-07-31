@@ -72,8 +72,7 @@ void keyboard_handler()
             }
             else
             {
-                print_str("Keyboard has no binding to handle character.");
-                put_nl();
+                puts("Keyboard has no binding to handle characters.\n");
             }
         }
     }

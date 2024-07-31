@@ -138,17 +138,7 @@ void reset_str(char* str)
     }
 }
 
-/**
- * Print string function
- */
-void print_str(char* str)
-{
-    while (*str)
-    {
-        putchar(*str++);
-    }
-}
-
+// Print a string into console
 void puts(const char* s)
 {
     while (*s)
@@ -157,16 +147,17 @@ void puts(const char* s)
     }
 }
 
-void print_str_in(char* str, int count)
+// Print characters n number of times
+void putns(const char* str, size_t n)
 {
-    while (count--)
+    while (n--)
     {
         putchar(*str++);
     }
 }
 
 // Example implementation of print_int assuming screen output functions exist
-void print_int(int n)
+void puti(int n)
 {
     // Create a empty array with length equal to the counts of the number to
     // hold the returen string
@@ -174,7 +165,7 @@ void print_int(int n)
     itoa(n, str, 10);
 
     // Assuming you have a function to print strings to the screen
-    print_str(str);  // Replace with your screen output function
+    puts(str);  // Replace with your screen output function
 }
 
 void reverse_str(char* str)

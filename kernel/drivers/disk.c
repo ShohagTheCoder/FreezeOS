@@ -97,7 +97,7 @@ void fz_write_sector(char* buffer, uint32_t lba)
     char status = inb(ATA_PRIMARY_IO + ATA_STATUS);
     if (status & ATA_ERROR)
     {
-        print_str("Somethis went wrong in fz_write_sector");
+        puts("Somethis went wrong in fz_write_sector");
     }
 }
 

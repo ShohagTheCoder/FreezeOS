@@ -181,7 +181,7 @@ void fz_create_file(char name[], char extension[])
     fz_write_sector((char*)root_entries, root_entries_start);
 
     // File created successfully
-    print_str("File created successfully\n");
+    puts("File created successfully\n");
 }
 
 int get_file_index_in_root_directories(DirEntry_t file)

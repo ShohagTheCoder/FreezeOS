@@ -39,9 +39,4 @@ void kernel()
     // ERROR("kernel.c", "kernel_main", "Reading from file is failed");
     // WARN("kernel.c", "kernel_main", "Reading from file is failed");
     // INFO("kernel.c", "kernel_main", "Reading from file is failed");
-
-    int i = 2644;
-    char* name = "shohag ahmed!";
-
-    printf("There is a man called %s. He is %d years old.", name, i);
 }

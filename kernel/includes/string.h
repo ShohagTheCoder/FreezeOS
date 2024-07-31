@@ -21,11 +21,17 @@ char* strncpy(char* dest, const char* src, size_t n);
 char* strcat(char* dest, const char* src);
 void pop(char* str);
 void push(char* str, char c);
+void puts(const char* str);
+void putns(const char* str, size_t n);
 void printf(const char* format, ...);
 
-void print_str(char* str);
-void print_str_in(char* str, int count);
-void print_int(int n);
+char* strchr(const char* str, int c);
+char* strpbrk(const char* str, const char* accept);
+size_t strspn(const char* str, char* accept);
+char* strtok(char* str, const char* delim);
+void strsplit(char* str, char** pointers, char* delim);
+
+void puti(int n);
 void reverse_str(char* str);
 int count_digits(int n);
 
@@ -34,12 +40,5 @@ void fz_substr(char str[], char* substr, int start, int count);
 void fz_fill_spaces(char* str, int end);
 void fz_to_uppercase(char* str);
 void fz_to_lowercase(char* str);
-
-char* strchr(const char* str, int c);
-char* strpbrk(const char* str, const char* accept);
-size_t strspn(const char* str, char* accept);
-char* strtok(char* str, const char* delim);
-
-void strsplit(char* str, char** pointers, char* delim);
 
 #endif
