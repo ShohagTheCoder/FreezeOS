@@ -51,36 +51,23 @@ void load_fat()
     read_sectors((uint8_t*)fat, fat_start, 1);
 }
 
-DirEntry_t find_file(char name[], char extension[])
+DirEntry_t find_file(char* name, char* extension)
 {
-    char fname[8] = "ONE     ";
-    char fextension[3] = "TXT";
-    // char* fname = mem_alloc(8);
-    // memset(fname, ' ', 8);
-    // char* fextension = mem_alloc(3);
-    // memset(fextension, ' ', 3);
+    char fname[9] = "        ";
+    char fextension[4] = "   ";
     fz_to_uppercase(name);
     fz_to_uppercase(extension);
-    // fz_strcpy_max(name, fname, 8);
-    // fz_strcpy_max(extension, fextension, 3);
-    // char* fextension = "TXT";
-
-    print_str(fname);
-    print_str(fextension);
-    print_str(" |");
+    fz_strcpy_max(name, fname, 8);
+    fz_strcpy_max(extension, fextension, 3);
 
     for (int i = 0; i < 256; i++)
     {
         if (str_cmp_in(fname, (char*)root_entries[i].name, 8) &&
             str_cmp_in(fextension, (char*)root_entries[i].extension, 3))
         {
-            mem_free(fname);
-            mem_free(extension);
             return root_entries[i];
         }
     }
-    mem_free(fname);
-    mem_free(extension);
     return empty_entry;
 }
 
@@ -140,27 +127,14 @@ void* file_read(char* name, char* ext)
     return buffer;
 }
 
-char* fz_make_fat16_file_name(char* name, char* extension)
-{
-    char* full_name = "           ";  // 11 characters name (name + extension)
-    fz_to_uppercase(name);
-    fz_to_uppercase(extension);
-    fz_strcpy_max(name, full_name, 8);
-    fz_strcpy_max(extension, full_name + 8, 3);
-    // Return the new name
-    return full_name;
-}
-
 void fz_create_file(char name[], char extension[])
 {
-    char* fname = "           ";
-    char* fextension = "   ";
+    char fname[9] = "        ";
+    char fextension[4] = "   ";
     fz_to_uppercase(name);
     fz_to_uppercase(extension);
     fz_strcpy_max(name, fname, 8);
     fz_strcpy_max(extension, fextension, 3);
-
-    print_str(fname);
 
     int index = 0;
     // Find empty file entry

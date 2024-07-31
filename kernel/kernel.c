@@ -27,4 +27,14 @@ void kernel()
 
     // Initialize shell
     shell_init();
+
+    log_init();
+
+    log_error("Hi Shohag Ahmed!");
+    log_warning("Hi Shohag Ahmed!");
+    log_info("Hi Shohag Ahmed!");
+
+    // DirEntry_t file = find_file("errors", "txt");
+
+    // log(file, "HELLO SHohag ahmed!");
 }

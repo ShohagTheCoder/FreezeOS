@@ -13,15 +13,8 @@ void log_init()
 
 void log(DirEntry_t file, char* message)
 {
-    char data[90];
-    fz_strncpy("File name : ", data, 13);
-    fz_strncpy("kernel.c", NULL, 10);
-    fz_strncpy("\nFunction name : ", NULL, 18);
-    fz_strncpy("main", NULL, 5);
-    fz_strncpy("\nmessage : ", NULL, 11);
-    fz_strcpy(message, NULL);
-
-    fz_fappend(file, data, 90);
+    s(message);
+    fz_fappend(file, message, NULL);
 }
 
 void log_warning(char* message)
@@ -33,9 +26,8 @@ void log_warning(char* message)
 
 void log_error(char* message)
 {
+    s(message);
     DirEntry_t file = find_file("errors", "txt");
-
-    print_str(file.name);
 
     log(file, message);
 }
