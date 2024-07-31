@@ -1,17 +1,7 @@
 #include "../includes/string.h"
 #include "../includes/console.h"
 
-static char* ptr;
-
-/**
- * @brief Counts the number of character in the string.
- *
- * This function take a string pointer and count ther length by looping the
- * string.
- *
- * @param str The pointer which locate the string starting position.
- * @return The lenght of the string a
- */
+// Counts the number of character in the string.
 size_t strlen(const char* s)
 {
     size_t len = 0;
@@ -31,27 +21,23 @@ size_t strlen(const char* s)
     return len;
 }
 
-// Append new charater to string
-void str_append(char str[], char n)
+// Remove the last caharcter of a string
+void pop(char* str)
 {
-    int len = strlen(str);
-    str[len] = n;
-    str[len + 1] = '\0';
-}
-
-int str_remove(char str[])
-{
-    int len = strlen(str);
+    size_t len = strlen(str);
 
     if (len > 0)
     {
-        str[len - 1] = '\0';
-        return 1;
+        str[len - 1] = '\0';  // Remove the last character
     }
-    else
-    {
-        return 0;
-    }
+}
+
+// Push a new character at the end of the string
+void push(char* str, char c)
+{
+    size_t len = strlen(str);
+    str[len] = c;
+    str[len + 1] = '\0';
 }
 
 // Reverse string
@@ -241,6 +227,23 @@ char* strcpy(char* dest, const char* src)
     return ret;
 }
 
+char* strncpy(char* dest, const char* src, size_t n)
+{
+    size_t i;
+
+    for (i = n; i < n && src[i] != '\0'; i++)
+    {
+        dest[i] = src[i];
+    }
+
+    for (; i < n; i++)
+    {
+        dest[i] = '\0';
+    }
+
+    return dest;
+}
+
 char* strcat(char* dest, const char* src)
 {
     char* ptr = dest + strlen(dest);
@@ -250,52 +253,6 @@ char* strcat(char* dest, const char* src)
     }
     *ptr = '\0';
     return dest;
-}
-
-void fz_strcpy(char* src, char* dest)
-{
-    if (dest == NULL)
-    {
-        dest = ptr;
-    }
-    while (*src)
-    {
-        *dest++ = *src++;
-    }
-    ptr = dest;
-}
-
-void fz_strncpy(char* src, char* dest, int count)
-{
-    if (dest == NULL)
-    {
-        dest = ptr;
-    }
-
-    while (count > 0)
-    {
-        *dest++ = *src++;
-        count--;
-    }
-
-    ptr = dest;
-}
-
-void fz_strcpy_max(char* src, char* dest, int max)
-{
-    if (dest == NULL)
-    {
-        dest = ptr;
-    }
-
-    // d("Destination", dest);
-
-    while (*src && max--)
-    {
-        *dest++ = *src++;
-    }
-
-    ptr = dest;
 }
 
 void fz_fill_spaces(char* str, int end)
@@ -352,9 +309,10 @@ void fz_to_lowercase(char* str)
     }
 }
 
-char* fz_strchr(const char* str, int c)
+// find the first occurance of the c and return the index
+char* strchr(const char* str, int c)
 {
-    while (*str)
+    while (*str)  // Loop untill we reach the end of the string
     {
         if (*str == (char)c)
         {
@@ -362,10 +320,16 @@ char* fz_strchr(const char* str, int c)
         }
         str++;
     }
-    return NULL;
+
+    if (*str == (char)c)  // Check if the character is at the end of the string
+    {
+        return (char*)str;
+    }
+
+    return NULL;  // If not match return NULL
 }
 
-char* fz_strpbrk(const char* str, const char* accept)
+char* strpbrk(const char* str, const char* accept)
 {
     while (*str)
     {
@@ -383,7 +347,7 @@ char* fz_strpbrk(const char* str, const char* accept)
     return NULL;
 }
 
-size_t fz_strspn(const char* str, char* accept)
+size_t strspn(const char* str, char* accept)
 {
     const char* p;
     const char* a;
@@ -404,7 +368,7 @@ size_t fz_strspn(const char* str, char* accept)
     return count;
 }
 
-char* fz_strtok(char* str, const char* delim)
+char* strtok(char* str, const char* delim)
 {
     static char* last;
     if (str == NULL)
@@ -425,7 +389,7 @@ char* fz_strtok(char* str, const char* delim)
     // }
 
     char* token = str;
-    str = fz_strpbrk(str, delim);
+    str = strpbrk(str, delim);
 
     if (str)
     {
@@ -440,16 +404,16 @@ char* fz_strtok(char* str, const char* delim)
     return token;
 }
 
-void fz_strsplit(char* str, char** pointers, char* delim)
+void strsplit(char* str, char** pointers, char* delim)
 {
-    char* token = fz_strtok(str, delim);
+    char* token = strtok(str, delim);
     int count = 0;
 
     while (token != NULL)
     {
         pointers[count] = token;
         count++;
-        token = fz_strtok(NULL, delim);
+        token = strtok(NULL, delim);
     }
 }
 

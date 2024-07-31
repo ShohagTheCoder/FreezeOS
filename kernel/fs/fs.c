@@ -43,12 +43,12 @@ uint32_t root_entries_start = RESERVED_SECTORS + (SECTORS_PER_FAT * 2);
 
 void load_root_entries()
 {
-    read_sectors((uint8_t*)root_entries, root_entries_start, 1);
+    read_sectors((char*)root_entries, root_entries_start, 1);
 }
 
 void load_fat()
 {
-    read_sectors((uint8_t*)fat, fat_start, 1);
+    read_sectors((char*)fat, fat_start, 1);
 }
 
 DirEntry_t find_file(char* name, char* extension)
@@ -57,8 +57,8 @@ DirEntry_t find_file(char* name, char* extension)
     char fextension[4] = "   ";
     fz_to_uppercase(name);
     fz_to_uppercase(extension);
-    fz_strcpy_max(name, fname, 8);
-    fz_strcpy_max(extension, fextension, 3);
+    strncpy(fname, name, 8);
+    strncpy(fextension, extension, 3);
 
     for (int i = 0; i < 256; i++)
     {
@@ -71,9 +71,9 @@ DirEntry_t find_file(char* name, char* extension)
     return empty_entry;
 }
 
-uint16_t get_next_cluster_number(uint16_t current_cluster)
+int get_next_cluster_number(int current_cluster)
 {
-    return ((uint16_t*)fat)[current_cluster];
+    return ((int*)fat)[current_cluster];
 }
 
 uint32_t get_sector_number(int current_cluster, int add)
@@ -84,7 +84,7 @@ uint32_t get_sector_number(int current_cluster, int add)
 void load_file(char* buffer, DirEntry_t file)
 {
     uint32_t size = (uint32_t)file.size;
-    uint8_t current_cluster_number = file.first_cluster_low;
+    int current_cluster_number = file.first_cluster_low;
     int sector_count = 0;
 
     // Load clusters
@@ -92,7 +92,7 @@ void load_file(char* buffer, DirEntry_t file)
     {
         load_cluster(buffer, get_sector_number(current_cluster_number, sector_count));
         size -= CLUSTER_SIZE;
-        current_cluster_number = (uint8_t)get_next_cluster_number(current_cluster_number);
+        current_cluster_number = get_next_cluster_number(current_cluster_number);
         buffer += CLUSTER_SIZE;
         sector_count += 4;
     }
@@ -133,8 +133,8 @@ void fz_create_file(char name[], char extension[])
     char fextension[4] = "   ";
     fz_to_uppercase(name);
     fz_to_uppercase(extension);
-    fz_strcpy_max(name, fname, 8);
-    fz_strcpy_max(extension, fextension, 3);
+    strncpy(fname, name, 8);
+    strncpy(fextension, extension, 3);
 
     int index = 0;
     // Find empty file entry
@@ -173,12 +173,12 @@ void fz_create_file(char name[], char extension[])
     fat[cluster_position] = 0xFFFF;
 
     // Copy contents
-    fz_strcpy_max(fname, (char*)root_entries[index].name, 8);
-    fz_strcpy_max(fextension, (char*)root_entries[index].extension, 3);
+    strncpy((char*)root_entries[index].name, fname, 8);
+    strncpy((char*)root_entries[index].extension, fextension, 3);
 
     // Write with new entry data
-    fz_write_sector((uint8_t*)fat, fat_start);
-    fz_write_sector((uint8_t*)root_entries, root_entries_start);
+    fz_write_sector((char*)fat, fat_start);
+    fz_write_sector((char*)root_entries, root_entries_start);
 
     // File created successfully
     print_str("File created successfully\n");
@@ -214,7 +214,7 @@ void fz_fappend(DirEntry_t file, char* data, int length)
     ClusterChain_t end_cluster = 0;
     int file_clusters = 0;
 
-    int xs = size;
+    size_t xs = size;
     // Find last sector
     while (xs >= CLUSTER_SIZE)
     {
@@ -242,11 +242,11 @@ void fz_fappend(DirEntry_t file, char* data, int length)
     char* buffer = mem_alloc(SECTOR_SIZE * clusters_to_write);
     // memset(buffer, 0, SECTOR_SIZE * clusters_to_write);
 
-    load_cluster((uint8_t*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
-    fz_strncpy(data, buffer + last_data_offset, length);
+    load_cluster((char*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
+    strncpy(buffer + last_data_offset, data, length);
 
     // Write back last cluster with new data
-    write_cluster((uint8_t*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
+    write_cluster((char*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
 
     // Make free the memory
     mem_free(buffer);
@@ -257,8 +257,8 @@ void fz_fappend(DirEntry_t file, char* data, int length)
     root_entries[file_index].size += length;
 
     // Write with new entry data
-    // fz_write_sector((uint8_t*)fat, fat_start);
-    fz_write_sector((uint8_t*)root_entries, root_entries_start);
+    // fz_write_sector((char*)fat, fat_start);
+    fz_write_sector((char*)root_entries, root_entries_start);
 }
 
 void fz_fdelete(DirEntry_t file)
@@ -273,6 +273,6 @@ void fz_fdelete(DirEntry_t file)
         current_cluster = next_culster;
     }
 
-    fz_write_sector((uint8_t*)fat, fat_start);
-    fz_write_sector((uint8_t*)root_entries, root_entries_start);
+    fz_write_sector((char*)fat, fat_start);
+    fz_write_sector((char*)root_entries, root_entries_start);
 }

@@ -17,32 +17,29 @@ void itoa(int num, char* str, int base);
 int strcmp(const char* a, const char* b);
 int strncmp(const char* a, const char* b, size_t n);
 char* strcpy(char* dest, const char* src);
+char* strncpy(char* dest, const char* src, size_t n);
 char* strcat(char* dest, const char* src);
+void pop(char* str);
+void push(char* str, char c);
+void printf(const char* format, ...);
 
 void print_str(char* str);
 void print_str_in(char* str, int count);
 void print_int(int n);
 void reverse_str(char* str);
 int count_digits(int n);
-void str_append(char str[], char n);
-int str_remove(char str[]);
-void printf(const char* format, ...);
 
 void reset_str(char* str);
 void fz_substr(char str[], char* substr, int start, int count);
-void fz_strcpy(char* src, char* dest);
-
-void fz_strncpy(char* src, char* dest, int count);
-void fz_strcpy_max(char* src, char* dest, int max);
 void fz_fill_spaces(char* str, int end);
 void fz_to_uppercase(char* str);
 void fz_to_lowercase(char* str);
 
-char* fz_strchr(const char* str, int c);
-char* fz_strpbrk(const char* str, const char* accept);
-size_t fz_strspn(const char* str, char* accept);
-char* fz_strtok(char* str, const char* delim);
+char* strchr(const char* str, int c);
+char* strpbrk(const char* str, const char* accept);
+size_t strspn(const char* str, char* accept);
+char* strtok(char* str, const char* delim);
 
-void fz_strsplit(char* str, char** pointers, char* delim);
+void strsplit(char* str, char** pointers, char* delim);
 
 #endif

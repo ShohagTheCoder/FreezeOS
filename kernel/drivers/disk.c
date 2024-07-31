@@ -54,14 +54,14 @@ void ata_wait_drq()
         ;
 }
 
-void read_sector(uint8_t* buffer, uint32_t lba)
+void read_sector(char* buffer, uint32_t lba)
 {
     outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
 
     outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, 1);
-    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (uint8_t)lba);
-    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (uint8_t)(lba >> 8));
-    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (uint8_t)(lba >> 16));
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (char)lba);
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (char)(lba >> 8));
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (char)(lba >> 16));
     outb(ATA_PRIMARY_IO + ATA_DRIVE_SELECT, 0xE0 | ((lba >> 24) & 0x0F));
     outb(ATA_PRIMARY_IO + ATA_COMMAND, ATA_CMD_READ_PIO);
 
@@ -71,15 +71,15 @@ void read_sector(uint8_t* buffer, uint32_t lba)
     insl(ATA_PRIMARY_IO + ATA_DATA, buffer, 256);  // 256 Words
 }
 
-void fz_write_sector(uint8_t* buffer, uint32_t lba)
+void fz_write_sector(char* buffer, uint32_t lba)
 {
     ata_wait_ready();
     // outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
 
     outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, 1);
-    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (uint8_t)lba);
-    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (uint8_t)(lba >> 8));
-    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (uint8_t)(lba >> 16));
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (char)lba);
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (char)(lba >> 8));
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (char)(lba >> 16));
     outb(ATA_PRIMARY_IO + ATA_DRIVE_SELECT, 0xE0 | ((lba >> 24) & 0x0F));
     outb(ATA_PRIMARY_IO + ATA_COMMAND, ATA_CMD_WRITE_PIO);
 
@@ -94,41 +94,41 @@ void fz_write_sector(uint8_t* buffer, uint32_t lba)
 
     ata_wait_ready();
 
-    uint8_t status = inb(ATA_PRIMARY_IO + ATA_STATUS);
+    char status = inb(ATA_PRIMARY_IO + ATA_STATUS);
     if (status & ATA_ERROR)
     {
         print_str("Somethis went wrong in fz_write_sector");
     }
 }
 
-void read_sectors(uint8_t* buffer, uint32_t lba, uint8_t sector_count)
+void read_sectors(char* buffer, uint32_t lba, char sector_count)
 {
-    for (uint8_t i = 0; i < sector_count; i++)
+    for (char i = 0; i < sector_count; i++)
     {
         read_sector(buffer, lba + i);
         buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
     }
 }
 
-void fz_write_sectors(uint8_t* buffer, uint32_t lba, uint8_t sector_count)
+void fz_write_sectors(char* buffer, uint32_t lba, char sector_count)
 {
-    for (uint8_t i = 0; i < sector_count; i++)
+    for (char i = 0; i < sector_count; i++)
     {
         fz_write_sector(buffer, lba + i);
         buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
     }
 }
 
-void read_bytes(uint8_t* buffer, uint32_t lba, uint16_t offset, uint16_t bytes_count)
+void read_bytes(char* buffer, uint32_t lba, uint16_t offset, uint16_t bytes_count)
 {
-    uint8_t* placeholder[512];
+    char* placeholder[512];
 
     outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
 
     outb(ATA_PRIMARY_IO + ATA_SECTOR_COUNT, 1);
-    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (uint8_t)lba);
-    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (uint8_t)(lba >> 8));
-    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (uint8_t)(lba >> 16));
+    outb(ATA_PRIMARY_IO + ATA_SECTOR_NUMBER, (char)lba);
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_LOW, (char)(lba >> 8));
+    outb(ATA_PRIMARY_IO + ATA_CYLINDER_HIGH, (char)(lba >> 16));
     outb(ATA_PRIMARY_IO + ATA_DRIVE_SELECT, 0xE0 | ((lba >> 24) & 0x0F));
     outb(ATA_PRIMARY_IO + ATA_COMMAND, ATA_CMD_READ_PIO);
 
@@ -139,22 +139,22 @@ void read_bytes(uint8_t* buffer, uint32_t lba, uint16_t offset, uint16_t bytes_c
 
     for (uint16_t i = 0; i <= bytes_count; i++)
     {
-        buffer[i] = ((uint8_t*)placeholder)[offset + i];
+        buffer[i] = ((char*)placeholder)[offset + i];
     }
 }
 
-void load_cluster(uint8_t* buffer, uint32_t lba)
+void load_cluster(char* buffer, uint32_t lba)
 {
-    for (uint8_t i = 0; i < 4; i++)
+    for (char i = 0; i < 4; i++)
     {
         read_sector(buffer, lba + i);
         buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes
     }
 }
 
-void write_cluster(uint8_t* buffer, uint32_t lba)
+void write_cluster(char* buffer, uint32_t lba)
 {
-    for (uint8_t i = 0; i < 4; i++)
+    for (char i = 0; i < 4; i++)
     {
         fz_write_sector(buffer, lba + i);
         buffer = buffer + 512;  // Advance the buffer pointer by 512 bytes

@@ -7,7 +7,6 @@
 
 static uint8_t dynamic_mem_area[DYNAMIC_MEM_TOTAL_SIZE];
 static dynamic_mem_node_t* dynamic_mem_start;
-static char* saved_ptr;
 
 // Initialize dynamic memory
 void init_dynamic_mem()

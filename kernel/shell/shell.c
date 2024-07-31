@@ -20,12 +20,10 @@ void shell(char c)
 {
     if (c == '\b')
     {
-        if (str_remove(shell_buffer))
-        {
-            cursor_back(1);
-            putchar(' ');
-            cursor_back(1);
-        }
+        pop(shell_buffer);
+        cursor_back(1);
+        putchar(' ');
+        cursor_back(1);
     }
     else if (c == '\n')
     {
@@ -35,7 +33,7 @@ void shell(char c)
     }
     else
     {
-        str_append(shell_buffer, c);
+        push(shell_buffer, c);
         putchar(c);
     }
 }
@@ -43,7 +41,7 @@ void shell(char c)
 void execute_command(char buffer[])
 {
     char* commnads[5];
-    fz_strsplit(buffer, commnads, " ");
+    strsplit(buffer, commnads, " ");
 
     if (strcmp("help", buffer))
     {
