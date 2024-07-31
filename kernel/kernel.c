@@ -16,6 +16,8 @@
  */
 void kernel()
 {
+    // Initilize memory and file system
+    init_dynamic_mem();
     load_root_entries();
     load_fat();
 
@@ -30,11 +32,7 @@ void kernel()
 
     log_init();
 
-    log_error("Hi Shohag Ahmed!");
-    log_warning("Hi Shohag Ahmed!");
-    log_info("Hi Shohag Ahmed!");
-
-    // DirEntry_t file = find_file("errors", "txt");
-
-    // log(file, "HELLO SHohag ahmed!");
+    ERROR("kernel.c", "kernel_main", "Reading from file is failed");
+    // WARN("kernel.c", "kernel_main", "Reading from file is failed");
+    // INFO("kernel.c", "kernel_main", "Reading from file is failed");
 }

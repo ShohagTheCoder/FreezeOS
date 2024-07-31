@@ -4,12 +4,17 @@
 #include "fs.h"
 #include "types.h"
 
+typedef struct
+{
+    const char* file;
+    const char* function;
+    const char* message;
+} __attribute__((packed)) log_t;
+
 void log_init();
 
-void log(DirEntry_t file, char* message);
-
-void log_warning(char* message);
-void log_error(char* message);
-void log_info(char* message);
+void ERROR(char* file, char* function, char* message);
+void WARN(char* file, char* function, char* message);
+void INFO(char* file, char* function, char* message);
 
 #endif

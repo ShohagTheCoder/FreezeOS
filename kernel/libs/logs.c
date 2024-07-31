@@ -11,30 +11,40 @@ void log_init()
     fz_create_file("info", "txt");
 }
 
-void log(DirEntry_t file, char* message)
+void save_log(DirEntry_t file, log_t log)
 {
-    s(message);
-    fz_fappend(file, message, NULL);
+    char* buffer = mem_alloc(200);
+    strcat(buffer, "File : ");
+    strcat(buffer, log.file);
+    strcat(buffer, ", Function : ");
+    strcat(buffer, log.function);
+    strcat(buffer, ", Message : ");
+    strcat(buffer, log.message);
+
+    print_str(buffer);
+
+    fz_fappend(file, buffer, NULL);
+
+    mem_free(buffer);
 }
 
-void log_warning(char* message)
+void WARN(char* file, char* function, char* message)
 {
-    DirEntry_t file = find_file("warnings", "txt");
-
-    log(file, message);
+    log_t log = {.file = file, .function = function, .message = message};
+    DirEntry_t log_file = find_file("warnings", "txt");
+    save_log(log_file, log);
 }
 
-void log_error(char* message)
+void ERROR(char* file, char* function, char* message)
 {
-    s(message);
-    DirEntry_t file = find_file("errors", "txt");
-
-    log(file, message);
+    log_t log = {.file = file, .function = function, .message = message};
+    DirEntry_t log_file = find_file("errors", "txt");
+    save_log(log_file, log);
 }
 
-void log_info(char* message)
+void INFO(char* file, char* function, char* message)
 {
-    DirEntry_t file = find_file("info", "txt");
-
-    log(file, message);
+    log_t log = {.file = file, .function = function, .message = message};
+    DirEntry_t log_file = find_file("info", "txt");
+    save_log(log_file, log);
 }

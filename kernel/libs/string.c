@@ -12,16 +12,22 @@ static char* ptr;
  * @param str The pointer which locate the string starting position.
  * @return The lenght of the string a
  */
-int strlen(char* str)
+size_t strlen(const char* s)
 {
-    int len = 0;
-    while (str[len] != '\0')
+    size_t len = 0;
+
+    // Process four characters at a time if possible
+    for (; *s && *(s + 1) && *(s + 2) && *(s + 3); s += 4)
     {
-        if (len > 100)
-            break;
-        len++;
+        len += 4;
     }
 
+    // Handle the remaining characters
+    while (*s)
+    {
+        len++;
+        s++;
+    }
     return len;
 }
 
@@ -176,12 +182,39 @@ int count_digits(int n)
     return count;
 }
 
-void fz_strcpy(char* src, char* dest)
+char* strcpy(char* dest, const char* src)
 {
+    char* ret = dest;
     while (*src)
     {
         *dest++ = *src++;
     }
+    *dest = "\0";
+    return ret;
+}
+
+char* strcat(char* dest, const char* src)
+{
+    char* ptr = dest + strlen(dest);
+    while (*src)
+    {
+        *ptr++ = *src++;
+    }
+    *ptr = '\0';
+    return dest;
+}
+
+void fz_strcpy(char* src, char* dest)
+{
+    if (dest == NULL)
+    {
+        dest = ptr;
+    }
+    while (*src)
+    {
+        *dest++ = *src++;
+    }
+    ptr = dest;
 }
 
 void fz_strncpy(char* src, char* dest, int count)
@@ -202,10 +235,19 @@ void fz_strncpy(char* src, char* dest, int count)
 
 void fz_strcpy_max(char* src, char* dest, int max)
 {
+    if (dest == NULL)
+    {
+        dest = ptr;
+    }
+
+    // d("Destination", dest);
+
     while (*src && max--)
     {
         *dest++ = *src++;
     }
+
+    ptr = dest;
 }
 
 void fz_fill_spaces(char* str, int end)

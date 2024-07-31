@@ -5,7 +5,7 @@
 
 void print_str(char* str);
 void print_str_in(char* str, int count);
-int strlen(char* str);
+size_t strlen(const char* s);
 void int_to_ascii(int n, char str[]);
 void print_int(int n);
 void reverse_str(char* str);
@@ -17,6 +17,8 @@ int str_cmp_in(char* str1, char* str2, int count);
 void reset_str(char* str);
 void fz_substr(char str[], char* substr, int start, int count);
 void fz_strcpy(char* src, char* dest);
+char* strcpy(char* dest, const char* src);
+char* strcat(char* dest, const char* src);
 void fz_strncpy(char* src, char* dest, int count);
 void fz_strcpy_max(char* src, char* dest, int max);
 void fz_fill_spaces(char* str, int end);
