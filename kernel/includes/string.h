@@ -3,6 +3,13 @@
 
 #include "types.h"
 
+// Define va_list and va_* macros
+typedef char* va_list;
+
+#define va_start(ap, last) (ap = (va_list)&last + sizeof(last))
+#define va_args(ap, type) (*(type*)((ap += sizeof(type)) - sizeof(type)))
+#define va_end(ap) (ap = (va_list)0);
+
 void print_str(char* str);
 void print_str_in(char* str, int count);
 size_t strlen(const char* s);
@@ -31,5 +38,7 @@ size_t fz_strspn(const char* str, char* accept);
 char* fz_strtok(char* str, const char* delim);
 
 void fz_strsplit(char* str, char** pointers, char* delim);
+
+void printf(const char* format, ...);
 
 #endif

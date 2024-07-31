@@ -54,6 +54,65 @@ int str_remove(char str[])
     }
 }
 
+// Reverse string
+void strrev(char* str)
+{
+    int length = strlen(str);
+    int start = 0;
+    int end = length - 1;
+
+    while (start < end)
+    {
+        // Swap characters
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+
+        // Move towards the middle
+        start++;
+        end--;
+    }
+}
+
+// Integer to string
+void itoa(int num, char* str, int base)
+{
+    int i = 0;
+    int isNegative = 0;
+
+    // Handle 0 explicitly
+    if (num == 0)
+    {
+        str[i++] = '0';
+        str[i] = '\0';
+        return;
+    }
+
+    // Handle negative numbers for base 10
+    if (num < 0 && base == 10)
+    {
+        isNegative = 1;
+        num = -num;  // Make negetive to positive
+    }
+
+    // Process individual digits
+    while (num != 0)
+    {
+        int rem = num % base;
+        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num = num / base;
+    }
+
+    // Append '-' of the number is negetive
+    if (isNegative)
+        str[i++] = '-';
+
+    str[i] = '\0';  // Null-terminate the string
+
+    // Reverse the string
+    strrev(str);
+}
+
 // Function to convert an integer to its ASCII representation
 void int_to_ascii(int n, char str[])
 {
@@ -120,6 +179,14 @@ void print_str(char* str)
     while (*str)
     {
         putchar(*str++);
+    }
+}
+
+void puts(const char* s)
+{
+    while (*s)
+    {
+        putchar(*s++);
     }
 }
 
@@ -403,4 +470,48 @@ void fz_strsplit(char* str, char** pointers, char* delim)
         count++;
         token = fz_strtok(NULL, delim);
     }
+}
+
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+
+void printf(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    for (const char* p = format; *p != '\0'; p++)
+    {
+        if (*p == '%' && *(p + 1) != '\0')
+        {
+            p++;  // Move to the format specifier
+            switch (*p)
+            {
+                case 'd':
+                    int i = va_args(args, int);
+                    char buffer[20];
+                    itoa(i, buffer, 10);  // Convert integer into string
+                    puts(buffer);
+                    break;
+                case 's':
+                    char* s = va_args(args, char*);
+                    puts(s);
+                    break;
+                case 'c':
+                    int c = va_args(args, int);  // I don't know more about it
+                    putchar(c);
+                    break;
+                default:
+                    putchar('%');
+                    putchar(*p);
+                    break;
+            }
+        }
+        else
+            putchar(*p);  // Print the character
+    }
+
+    va_end(args);
 }

@@ -13,18 +13,18 @@ void log_init()
 
 void save_log(DirEntry_t file, log_t log)
 {
-    char* buffer = mem_alloc(200);
+    // Allocate memory for buffer
+    size_t log_size = strlen(log.file) + strlen(log.function) + strlen(log.message) + 1;
+    char* buffer = mem_alloc(log_size);
     strcat(buffer, "File : ");
     strcat(buffer, log.file);
     strcat(buffer, ", Function : ");
     strcat(buffer, log.function);
     strcat(buffer, ", Message : ");
     strcat(buffer, log.message);
-
-    print_str(buffer);
-
+    // Save the buffer to the log file
     fz_fappend(file, buffer, NULL);
-
+    // Make free the memory
     mem_free(buffer);
 }
 
