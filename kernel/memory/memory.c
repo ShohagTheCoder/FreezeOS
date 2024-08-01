@@ -132,3 +132,11 @@ void memset(char* ptr, char c, int count)
         *ptr++ = c;
     }
 }
+
+void clear(char* buffer, int n)
+{
+    while (n--)
+    {
+        *buffer++ = 0;
+    }
+}

@@ -210,9 +210,13 @@ char* strcpy(char* dest, const char* src)
     return ret;
 }
 
-char* strncpy(char* dest, const char* src, size_t n)
+char* strncpy(char* dest, const char* src, int n)
 {
-    size_t i;
+    // puts(dest);
+    // hr();
+    // puti(dest);
+    // puts(dest);
+    int i;
     for (i = 0; i < n && src[i] != '\0'; i++)
     {
         dest[i] = src[i];
@@ -225,6 +229,16 @@ char* strncpy(char* dest, const char* src, size_t n)
     }
 
     return dest;
+}
+
+void strpad(char* str, int max, char c)
+{
+    int len = strlen(str);
+    if (len < max)
+    {
+        memset(str + len, c, max - len);
+        str[max] = '\0';
+    }
 }
 
 char* strcat(char* dest, const char* src)

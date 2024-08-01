@@ -73,6 +73,7 @@ void read_sector(char* buffer, uint32_t lba)
 
 void fz_write_sector(char* buffer, uint32_t lba)
 {
+    // printf("fz_write_sector -> lba : %d, buffer : %s\n", lba, buffer);
     ata_wait_ready();
     // outb(ATA_PRIMARY_CONTROL, 0x02);  // Disable IRQ's
 
@@ -154,6 +155,8 @@ void load_cluster(char* buffer, uint32_t lba)
 
 void write_cluster(char* buffer, uint32_t lba)
 {
+    // puts(buffer);
+    // puti(lba);
     for (char i = 0; i < 4; i++)
     {
         fz_write_sector(buffer, lba + i);

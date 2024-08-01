@@ -16,5 +16,6 @@ void init_dynamic_mem();
 void* malloc(size_t size);
 void free(void* ptr);
 void memset(char* ptr, char c, int count);
+void clear(char* buffer, int n);
 
 #endif

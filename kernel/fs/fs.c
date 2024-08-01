@@ -16,7 +16,7 @@
 #define TOTAL_SECTORS 20480
 #define SECTORS_PER_FAT 20
 #define SECTOR_SIZE 512
-#define CLUSTER_SIZE 4 * SECTOR_SIZE
+#define CLUSTER_SIZE 2048
 #define DATA_SECTOR_START 68
 #define END_OF_CLUSTER 0xFFFF
 
@@ -51,19 +51,24 @@ void load_fat()
     read_sectors((char*)fat, fat_start, 1);
 }
 
+void make_fname(char* dest, const char* src, size_t size)
+{
+    to_uppercase(src);
+    strncpy(dest, src, size);
+    strpad(dest, size, ' ');
+}
+
 DirEntry_t find_file(char* name, char* extension)
 {
-    char fname[9] = "        ";
-    char fextension[4] = "   ";
-    to_uppercase(name);
-    to_uppercase(extension);
-    strncpy(fname, name, 8);
-    strncpy(fextension, extension, 3);
+    char fname[9];
+    char fextension[4];
+    make_fname(fname, name, 8);
+    make_fname(fextension, extension, 3);
 
     for (int i = 0; i < 256; i++)
     {
-        if (strncmp(fname, (char*)root_entries[i].name, 8) &&
-            strncmp(fextension, (char*)root_entries[i].extension, 3))
+        if (strncmp(fname, (char*)root_entries[i].name, 8) == 0 &&
+            strncmp(fextension, (char*)root_entries[i].extension, 3) == 0)
         {
             return root_entries[i];
         }
@@ -129,14 +134,10 @@ void* file_read(char* name, char* ext)
 
 void fz_create_file(char name[], char extension[])
 {
-    char fname[9] = "        ";
-    char fextension[4] = "   ";
-    to_uppercase(name);
-    to_uppercase(extension);
-    printf("Name : %s, Extension : %s\n", name, extension);
-    strncpy(fname, name, 8);
-    strncpy(fextension, extension, 3);
-    printf("Name : %s, Extension : %s\n", fname, fextension);
+    char fname[9];
+    char fextension[4];
+    make_fname(fname, name, 8);
+    make_fname(fextension, extension, 3);
 
     int index = 0;
     // Find empty file entry
@@ -188,8 +189,8 @@ int get_file_index_in_root_directories(DirEntry_t file)
     int index = -1;
     for (int i = 0; i < 20; i++)
     {
-        if (strncmp((const char*)file.name, (const char*)root_entries[i].name, 8) &&
-            strncmp((const char*)file.extension, (const char*)root_entries[i].extension, 3))
+        if (strncmp((char*)file.name, (char*)root_entries[i].name, 8) == 0 &&
+            strncmp((char*)file.extension, (char*)root_entries[i].extension, 3) == 0)
         {
             index = i;
             break;
@@ -199,36 +200,28 @@ int get_file_index_in_root_directories(DirEntry_t file)
     return index;
 }
 
-void fz_fappend(DirEntry_t file, char* data, int length)
+void fz_fappend(DirEntry_t file, const char* data)
 {
-    if (length == NULL)
-    {
-        length = strlen(data);
-    }
-
     // Variables
+    int length = strlen(data);
+    int size = (int)file.size;
     int clusters_to_write = 0;
-    int size = file.size;
     ClusterChain_t last_cluster = file.first_cluster_low;
     ClusterChain_t end_cluster = 0;
-    int file_clusters = 0;
 
-    size_t xs = size;
-    // Find last sector
-    while (xs >= CLUSTER_SIZE)
-    {
-        file_clusters++;
-        xs -= CLUSTER_SIZE;
-    }
+    // Last cluster
+    int rem = size % CLUSTER_SIZE;
+    int offset = rem;
 
-    // Find how many sectors to write
-    int last_data_offset = xs;
-    xs += length;
-    while (xs > 0)
+    rem += length;
+    while (rem >= CLUSTER_SIZE)
     {
         clusters_to_write++;
-        xs -= CLUSTER_SIZE;
+        rem -= CLUSTER_SIZE;
     }
+
+    if (rem > 0)
+        clusters_to_write += 1;
 
     end_cluster = fat[last_cluster];
     while (end_cluster != END_OF_CLUSTER)
@@ -239,19 +232,19 @@ void fz_fappend(DirEntry_t file, char* data, int length)
 
     // Read last cluster
     char* buffer = malloc(SECTOR_SIZE * clusters_to_write);
-    // memset(buffer, 0, SECTOR_SIZE * clusters_to_write);
-
-    load_cluster((char*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
-    strncpy(buffer + last_data_offset, data, length);
+    clear(buffer, SECTOR_SIZE * clusters_to_write);
+    if (size > 0)
+    {
+        load_cluster(buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
+    }
+    strncpy((buffer + offset), data, length);
 
     // Write back last cluster with new data
-    write_cluster((char*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
-
+    write_cluster(buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
     // Make free the memory
     free(buffer);
 
     int file_index = get_file_index_in_root_directories(file);
-
     // Update file and cluster chain
     root_entries[file_index].size += length;
 

@@ -13,17 +13,13 @@ void log_init()
 
 void save_log(DirEntry_t file, log_t log)
 {
+    // putns(file.name, 8);
+    // puts("\n");
     // Allocate memory for buffer
-    size_t log_size = strlen(log.file) + strlen(log.function) + strlen(log.message) + 1;
-    char* buffer = malloc(log_size);
-    strcat(buffer, "File : ");
-    strcat(buffer, log.file);
-    strcat(buffer, ", Function : ");
-    strcat(buffer, log.function);
-    strcat(buffer, ", Message : ");
-    strcat(buffer, log.message);
-    // Save the buffer to the log file
-    fz_fappend(file, buffer, NULL);
+    char* buffer = malloc(MAX_BUFFER_SIZE / 4);
+    sprintf(buffer, "File : %s, Function : %s, Message : %s", log.file, log.function, log.message);
+    // log.message); Save the buffer to the log file puts(buffer);
+    fz_fappend(file, buffer);
     // Make free the memory
     free(buffer);
 }

@@ -13,27 +13,29 @@ typedef char* va_list;
 
 // Standard funcitons
 size_t strlen(const char* s);
+int count_digits(int n);
 void strrev(char* str);
 void itoa(int num, char* str, int base);
 int strcmp(const char* a, const char* b);
 int strncmp(const char* a, const char* b, size_t n);
-char* strcpy(char* dest, const char* src);
-char* strncpy(char* dest, const char* src, size_t n);
-char* strcat(char* dest, const char* src);
 void pop(char* str);
 void push(char* str, char c);
-void puts(const char* str);
-void putns(const char* str, size_t n);
-void printf(const char* format, ...);
+char* strcpy(char* dest, const char* src);
+char* strncpy(char* dest, const char* src, int n);
+char* strcat(char* dest, const char* src);
 char* strchr(const char* str, int c);
 char* strpbrk(const char* str, const char* accept);
 size_t strspn(const char* str, char* accept);
 char* strtok(char* str, const char* delim);
 void strsplit(char* str, char** pointers, char* delim);
-void puti(int n);
-int count_digits(int n);
 void to_uppercase(char* str);
 void to_lowercase(char* str);
+void strpad(char* str, int max, char c);
 char* substr(const char* src, int start, int length);
+void puts(const char* str);
+void putns(const char* str, size_t n);
+void puti(int n);
+void printf(const char* format, ...);
+void sprintf(char* buffer, const char* format, ...);
 
 #endif
