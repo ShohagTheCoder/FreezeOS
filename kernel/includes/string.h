@@ -9,6 +9,7 @@ typedef char* va_list;
 #define va_start(ap, last) (ap = (va_list)&last + sizeof(last))
 #define va_args(ap, type) (*(type*)((ap += sizeof(type)) - sizeof(type)))
 #define va_end(ap) (ap = (va_list)0);
+#define MAX_BUFFER_SIZE 1024
 
 // Standard funcitons
 size_t strlen(const char* s);

@@ -13,8 +13,8 @@ typedef struct dynamic_mem_node
 
 void init_dynamic_mem();
 
-void* mem_alloc(size_t size);
-void mem_free(void* ptr);
+void* malloc(size_t size);
+void free(void* ptr);
 void memset(char* ptr, char c, int count);
 
 #endif

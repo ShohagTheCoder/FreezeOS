@@ -30,9 +30,11 @@ void kernel()
     // Initialize shell
     shell_init();
 
-    log_init();
+    printf("Hello %s", "Shohag Ahmed");
 
-    ERROR("kernel.c", "kernel_main", "Reading from file is failed");
-    WARN("kernel.c", "kernel_main", "Reading from file is failed");
-    INFO("kernel.c", "kernel_main", "Reading from file is failed");
+    // log_init();
+
+    // ERROR("kernel.c", "kernel_main", "Reading from file is failed");
+    // WARN("kernel.c", "kernel_main", "Reading from file is failed");
+    // INFO("kernel.c", "kernel_main", "Reading from file is failed");
 }

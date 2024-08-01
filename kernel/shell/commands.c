@@ -81,9 +81,10 @@ void command_sizeof(char** cmds)
 void command_dump(char** cmds)
 {
     DirEntry_t file = find_file(cmds[1], cmds[2]);
-    char* buffer = mem_alloc(file.size);
+    char* buffer = malloc(file.size);
     load_file(buffer, file);
     puts("File Contents : ");
     putns(buffer, file.size);
     put_nl();
+    free(buffer);
 }

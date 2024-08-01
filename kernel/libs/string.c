@@ -255,7 +255,7 @@ char* substr(const char* src, int start, int length)
     }
 
     // Allocase memory for the substring
-    char* result = (char*)mem_alloc(length + 1);
+    char* result = (char*)malloc(length + 1);
     if (result == NULL)
     {
         puts("Memory allocation faild\n");
@@ -394,10 +394,14 @@ void strsplit(char* str, char** pointers, char* delim)
     }
 }
 
-void printf(const char* format, ...)
+char* format_string(const char* format, va_list args)
 {
-    va_list args;
-    va_start(args, format);
+    // Allocate memory space for the formated string
+    char* str = malloc(MAX_BUFFER_SIZE);
+    if (str == NULL)
+    {
+        return NULL;
+    }
 
     for (const char* p = format; *p != '\0'; p++)
     {
@@ -410,25 +414,55 @@ void printf(const char* format, ...)
                     int i = va_args(args, int);
                     char buffer[20];
                     itoa(i, buffer, 10);  // Convert integer into string
-                    puts(buffer);
+                    strcat(str, buffer);
                     break;
                 case 's':
                     char* s = va_args(args, char*);
-                    puts(s);
+                    strcat(str, s);
                     break;
                 case 'c':
                     int c = va_args(args, int);  // I don't know more about it
-                    putchar(c);
+                    push(str, c);
                     break;
                 default:
-                    putchar('%');
-                    putchar(*p);
+                    push(str, '%');
+                    push(str, *p);
                     break;
             }
         }
         else
-            putchar(*p);  // Print the character
+        {
+            push(str, *p);  // Print the character
+        }
     }
 
+    return str;
+}
+
+// Formate a string and print into the console
+void printf(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    char* str = format_string(format, args);
+    if (str != NULL)
+    {
+        puts(str);
+        free(str);
+    }
+    va_end(args);
+}
+
+// Formate a string and save in buffer
+void sprintf(char* buffer, const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    char* str = format_string(format, args);
+    if (str != NULL)
+    {
+        strncpy(buffer, str, MAX_BUFFER_SIZE);
+        free(str);
+    }
     va_end(args);
 }

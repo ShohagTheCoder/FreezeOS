@@ -73,7 +73,8 @@ void merge_current_node_into_previous(dynamic_mem_node_t* current_mem_node)
     }
 }
 
-void* mem_alloc(size_t size)
+// Dynamically allocate memory space
+void* malloc(size_t size)
 {
     dynamic_mem_node_t* best_mem_block = find_best_mem_block(dynamic_mem_start, size);
 
@@ -101,7 +102,8 @@ void* mem_alloc(size_t size)
     return NULL_POINTER;
 }
 
-void mem_free(void* ptr)
+// Make free the dynamically allocated memory space
+void free(void* ptr)
 {
     if (ptr == NULL_POINTER)
     {
@@ -122,6 +124,7 @@ void mem_free(void* ptr)
     merge_current_node_into_previous(current_mem_node);
 }
 
+// Set memory spaces to c
 void memset(char* ptr, char c, int count)
 {
     while (count--)

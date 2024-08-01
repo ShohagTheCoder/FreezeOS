@@ -120,7 +120,7 @@ void* file_read(char* name, char* ext)
     // Find file
     DirEntry_t file = find_file(name, ext);
     // Create buffer to hold the file
-    void* buffer = mem_alloc((size_t)file.size);
+    void* buffer = malloc((size_t)file.size);
     // Load the file data in buffer
     load_file(buffer, file);
     // Return buffer
@@ -238,7 +238,7 @@ void fz_fappend(DirEntry_t file, char* data, int length)
     }
 
     // Read last cluster
-    char* buffer = mem_alloc(SECTOR_SIZE * clusters_to_write);
+    char* buffer = malloc(SECTOR_SIZE * clusters_to_write);
     // memset(buffer, 0, SECTOR_SIZE * clusters_to_write);
 
     load_cluster((char*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
@@ -248,7 +248,7 @@ void fz_fappend(DirEntry_t file, char* data, int length)
     write_cluster((char*)buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));
 
     // Make free the memory
-    mem_free(buffer);
+    free(buffer);
 
     int file_index = get_file_index_in_root_directories(file);
 
