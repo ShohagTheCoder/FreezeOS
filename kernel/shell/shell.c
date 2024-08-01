@@ -1,6 +1,7 @@
 #include "../includes/shell.h"
 #include "../includes/console.h"
 #include "../includes/keyboard.h"
+#include "../includes/memory.h"
 #include "../includes/string.h"
 
 static char shell_buffer[256];
@@ -38,36 +39,36 @@ void shell(char c)
     }
 }
 
-void execute_command(char buffer[])
+void execute_command(char* buffer)
 {
     char* commnads[5];
     strsplit(buffer, commnads, " ");
 
-    if (strcmp("help", buffer))
+    if (strcmp("help", buffer) == 0)
     {
         command_help();
     }
-    else if (strcmp("clear", buffer))
+    else if (strcmp("clear", buffer) == 0)
     {
         clear_screen();
     }
-    else if (strcmp("ls", buffer))
+    else if (strcmp("ls", buffer) == 0)
     {
         command_ls();
     }
-    else if (strcmp("touch", buffer))
+    else if (strcmp("touch", buffer) == 0)
     {
         command_touch(commnads);
     }
-    else if (strcmp("cat", buffer))
+    else if (strcmp("cat", buffer) == 0)
     {
         command_cat(commnads);
     }
-    else if (strcmp("sizeof", buffer))
+    else if (strcmp("sizeof", buffer) == 0)
     {
         command_sizeof(commnads);
     }
-    else if (strcmp("dump", buffer))
+    else if (strcmp("dump", buffer) == 0)
     {
         command_dump(commnads);
     }
@@ -77,5 +78,5 @@ void execute_command(char buffer[])
     }
 
     // Reset the buffer
-    reset_str(buffer);
+    memset(buffer, '\0', strlen(buffer));
 }

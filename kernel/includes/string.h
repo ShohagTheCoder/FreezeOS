@@ -24,21 +24,15 @@ void push(char* str, char c);
 void puts(const char* str);
 void putns(const char* str, size_t n);
 void printf(const char* format, ...);
-
 char* strchr(const char* str, int c);
 char* strpbrk(const char* str, const char* accept);
 size_t strspn(const char* str, char* accept);
 char* strtok(char* str, const char* delim);
 void strsplit(char* str, char** pointers, char* delim);
-
 void puti(int n);
-void reverse_str(char* str);
 int count_digits(int n);
-
-void reset_str(char* str);
-void fz_substr(char str[], char* substr, int start, int count);
-void fz_fill_spaces(char* str, int end);
-void fz_to_uppercase(char* str);
-void fz_to_lowercase(char* str);
+void to_uppercase(char* str);
+void to_lowercase(char* str);
+char* substr(const char* src, int start, int length);
 
 #endif

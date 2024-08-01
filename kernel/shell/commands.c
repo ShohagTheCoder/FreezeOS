@@ -21,7 +21,7 @@ void command_ls()
     extern DirEntry_t root_entries[256];
 
     puts("-------------------------------\n");
-    puts(" Name     | Ext | Size");
+    puts(" Name     | Ext | Size\n");
     puts("-------------------------------\n");
 
     for (int i = 0; i < 256; i++)
@@ -57,8 +57,8 @@ void command_unknown(char buffer[])
 
 void command_touch(char** cmds)
 {
-    fz_to_uppercase(cmds[1]);
-    fz_to_uppercase(cmds[2]);
+    to_uppercase(cmds[1]);
+    to_uppercase(cmds[2]);
     fz_create_file(cmds[1], cmds[2]);
     put_nl();
 }

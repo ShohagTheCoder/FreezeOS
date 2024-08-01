@@ -1,5 +1,6 @@
 #include "../includes/string.h"
 #include "../includes/console.h"
+#include "../includes/memory.h"
 
 // Counts the number of character in the string.
 size_t strlen(const char* s)
@@ -129,15 +130,6 @@ int strncmp(const char* a, const char* b, size_t n)
     return *(unsigned char*)a - *(unsigned char*)b;
 }
 
-void reset_str(char* str)
-{
-    int len = strlen(str);
-    for (size_t i = 0; i < len; ++i)
-    {
-        str[i] = '\0';  // Set each character to null ('\0')
-    }
-}
-
 // Print a string into console
 void puts(const char* s)
 {
@@ -185,16 +177,16 @@ int count_digits(int n)
 {
     int count = 0;
 
-    // Handle negative ns
-    if (n < 0)
-    {
-        n = -n;
-    }
-
     // Handle the special case of 0
     if (n == 0)
     {
         return 1;
+    }
+
+    // Handle negative ns
+    if (n < 0)
+    {
+        n = -n;
     }
 
     // Count the n of digits
@@ -221,12 +213,12 @@ char* strcpy(char* dest, const char* src)
 char* strncpy(char* dest, const char* src, size_t n)
 {
     size_t i;
-
-    for (i = n; i < n && src[i] != '\0'; i++)
+    for (i = 0; i < n && src[i] != '\0'; i++)
     {
         dest[i] = src[i];
     }
 
+    // Fill remaing spaces with null-terminators
     for (; i < n; i++)
     {
         dest[i] = '\0';
@@ -246,37 +238,38 @@ char* strcat(char* dest, const char* src)
     return dest;
 }
 
-void fz_fill_spaces(char* str, int end)
+// Function to extract a substring
+char* substr(const char* src, int start, int length)
 {
-    int start = strlen(str);
-    for (int i = start; i < end; i++)
+    int src_len = strlen(src);
+    // Validate the input
+    if (src == NULL || start < 0 || length < 0 || start >= src_len)
     {
-        str[i] = ' ';
+        return NULL;
     }
 
-    str[end] = '\0';
-}
-
-void fz_substr(char str[], char* substr, int start, int count)
-{
-    count += start;
-    int index = start;
-    for (int i = start; i < count; i++)
+    // Adjust the length if its goes beyond the src string
+    if (start + length > src_len)
     {
-        if (str[i] == '\0')
-        {
-            substr[i - index] = ' ';
-        }
-        else
-        {
-            substr[i - index] = str[i];
-        }
+        length = src_len - start;
     }
 
-    substr[count - index] = '\0';
+    // Allocase memory for the substring
+    char* result = (char*)mem_alloc(length + 1);
+    if (result == NULL)
+    {
+        puts("Memory allocation faild\n");
+        return NULL;
+    }
+
+    // Copy the substring
+    strncpy(result, src, length);
+    result[length] = '\0';  // Null-terminate the string
+
+    return result;
 }
 
-void fz_to_uppercase(char* str)
+void to_uppercase(char* str)
 {
     while (*str)
     {
@@ -288,7 +281,7 @@ void fz_to_uppercase(char* str)
     }
 }
 
-void fz_to_lowercase(char* str)
+void to_lowercase(char* str)
 {
     while (*str)
     {
@@ -372,13 +365,6 @@ char* strtok(char* str, const char* delim)
         return NULL;
     }
 
-    // str += fz_strspn(str, delim);  // Skip leading dilimiters
-
-    // if (*str == '\0')
-    // {
-    //     return NULL;
-    // }
-
     char* token = str;
     str = strpbrk(str, delim);
 
@@ -407,11 +393,6 @@ void strsplit(char* str, char** pointers, char* delim)
         token = strtok(NULL, delim);
     }
 }
-
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////////////////////////////////////////
 
 void printf(const char* format, ...)
 {
