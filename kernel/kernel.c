@@ -37,7 +37,7 @@ void kernel()
     // puti(file.size);
     // fz_fappend(file, "Bangladesh!");
 
-    ERROR("kernel.c", "kernel_main", "Reading from file is failed");
+    // ERROR("kernel.c", "kernel_main", "Reading from file is failed");
     // WARN("kernel.c", "kernel_main", "Reading from file is failed");
     // INFO("kernel.c", "kernel_main", "Reading from file is failed");
 }

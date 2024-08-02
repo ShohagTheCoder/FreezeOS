@@ -7,5 +7,6 @@ drivers/console.c
 io.c shell/shell.c
 shell/commands.c
 fs/fs.c
+fs/fat16.c
 drivers/disk.c
 memory/memory.c

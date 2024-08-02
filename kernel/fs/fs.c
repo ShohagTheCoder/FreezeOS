@@ -3,6 +3,7 @@
 #include "../includes/disk.h"
 #include "../includes/io.h"
 #include "../includes/memory.h"
+#include "../includes/stdio.h"
 #include "../includes/string.h"
 
 // Constants
@@ -53,7 +54,7 @@ void load_fat()
 
 void make_fname(char* dest, const char* src, size_t size)
 {
-    to_uppercase(src);
+    to_uppercase((char*)src);
     strncpy(dest, src, size);
     strpad(dest, size, ' ');
 }
@@ -291,3 +292,33 @@ void fz_fdelete(DirEntry_t file)
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
+
+// FILE* fopen(const char* filename, const char* mode)
+// {
+//     // Open a file and get a file descriptor
+//     int fd = open_file(filename, mode);
+//     if (fd < 0)
+//         return NULL;
+
+//     // Allocate and initilize the fie structure
+//     FILE* file = malloc(sizeof(FILE));
+//     if (!file)
+//         return NULL;
+
+//     file->fd = fd;
+//     file->buffer = malloc(MAX_BUFFER_SIZE);
+//     if (!file->buffer)
+//     {
+//         free(file);
+//         return NULL;
+//     }
+
+//     // Save file info
+//     file->mode = READ;
+//     file->size = MAX_BUFFER_SIZE;
+//     file->pos = 0;
+//     file->flags = 0;
+
+//     // Return the file
+//     return file;
+// }

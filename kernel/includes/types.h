@@ -2,7 +2,7 @@
 #define TYPES_H
 
 #ifndef NULL
-#define NULL 0
+#define NULL ((void*)0)
 #endif
 
 typedef enum
