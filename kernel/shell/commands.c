@@ -1,3 +1,4 @@
+#include <string.h>
 #include "../includes/console.h"
 #include "../includes/fs.h"
 #include "../includes/memory.h"

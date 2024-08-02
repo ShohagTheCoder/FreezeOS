@@ -1,4 +1,5 @@
 #include "../includes/fs.h"
+#include <string.h>
 #include "../includes/console.h"
 #include "../includes/disk.h"
 #include "../includes/io.h"

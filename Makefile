@@ -13,6 +13,7 @@ MOUNT_POINT			:= /mnt
 .PHONY : all clean run debug bootloader kernel
 all : clean $(ISO_FILE) run
 
+# Make the final iso file
 $(ISO_FILE): kernel
 	@mkdir -p $(@D)
 	dd if=/dev/zero of=$@ bs=1M count=10
@@ -22,21 +23,21 @@ $(ISO_FILE): kernel
 	sudo mount -o loop $@ $(MOUNT_POINT)
 	sudo cp $(LOADER_BIN) $(MOUNT_POINT)
 	sudo cp $(KERNEL_BIN) $(MOUNT_POINT)
-	sudo cp one.txt $(MOUNT_POINT)
-# sudo cp two.txt $(MOUNT_POINT)
-
-# sudo cp logs/errors.txt $(MOUNT_POINT)
-# sudo cp logs/warnings.txt $(MOUNT_POINT)
-# sudo cp logs/info.txt $(MOUNT_POINT)
 	sudo umount $(MOUNT_POINT)
 
+# Make boot & kernel
 kernel:
 	$(MAKE) -C boot
 	$(MAKE) -C kernel
 
+# Make slibc library
+lib:
+	$(MAKE) -C kernel/libs
+
 run : 
 	qemu-system-i386 -drive format=raw,file=$(ISO_FILE)
 
+# Cleanup all build files
 clean:
 	rm -rf $(BUILD_DIR)/*
 	clear

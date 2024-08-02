@@ -1,26 +1,27 @@
 #include "../includes/string.h"
+#include <string.h>
 #include "../includes/console.h"
 #include "../includes/memory.h"
 
 // Counts the number of character in the string.
-size_t strlen(const char* s)
-{
-    size_t len = 0;
+// size_t strlen(const char* s)
+// {
+//     size_t len = 0;
 
-    // Process four characters at a time if possible
-    for (; *s && *(s + 1) && *(s + 2) && *(s + 3); s += 4)
-    {
-        len += 4;
-    }
+//     // Process four characters at a time if possible
+//     for (; *s && *(s + 1) && *(s + 2) && *(s + 3); s += 4)
+//     {
+//         len += 4;
+//     }
 
-    // Handle the remaining characters
-    while (*s)
-    {
-        len++;
-        s++;
-    }
-    return len;
-}
+//     // Handle the remaining characters
+//     while (*s)
+//     {
+//         len++;
+//         s++;
+//     }
+//     return len;
+// }
 
 // Remove the last caharcter of a string
 void pop(char* str)

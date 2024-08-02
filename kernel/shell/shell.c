@@ -1,4 +1,5 @@
 #include "../includes/shell.h"
+#include <string.h>
 #include "../includes/console.h"
 #include "../includes/keyboard.h"
 #include "../includes/memory.h"

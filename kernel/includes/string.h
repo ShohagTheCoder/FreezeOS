@@ -12,7 +12,8 @@ typedef char* va_list;
 #define MAX_BUFFER_SIZE 1024
 
 // Standard funcitons
-size_t strlen(const char* s);
+// size_t strlen(const char* s);
+// int strlen(const char* s);
 int count_digits(int n);
 void strrev(char* str);
 void itoa(int num, char* str, int base);

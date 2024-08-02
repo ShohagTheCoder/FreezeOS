@@ -13,13 +13,14 @@ LOADER_BIN	 		:= $(BUILD_KERNEL_DIR)/loader.bin
 KERNEL_BIN	 		:= $(BUILD_KERNEL_DIR)/kernel.bin
 KERNEL_ENTRY_ASM	:= arch/x86/kernel_entry.asm
 KERNEL_ENTRY_OBJ	:= $(BUILD_KERNEL_DIR)/kernel_entry.o
+SLIBC				:= libs/libs.a
 
 # Configurations
 LD_FILE				:= ../configs/kernel/linker.ld
 LOADER_LD_FILE		:= ../configs/kernel/loader.ld
 
 # Flags
-CFLAGS				:= -ffreestanding -Wall -nostdlib -m32 -g
+CFLAGS				:= -I./libs/include -ffreestanding -nostdlib -m32 -g -Wall -Wextra
 
 # Rules
 .PHONY: all
@@ -29,7 +30,7 @@ $(LOADER_BIN): $(LOADER_ASM)
 	@mkdir -p $(@D)
 	nasm -f bin $< -o $@
 
-$(KERNEL_BIN): $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ_FILES)
+$(KERNEL_BIN): $(KERNEL_ENTRY_OBJ) $(KERNEL_OBJ_FILES) $(SLIBC)
 	ld -T $(LD_FILE) -m elf_i386 -o $(KERNEL_ELF) $^
 	objcopy -O binary $(KERNEL_ELF) $@
 	

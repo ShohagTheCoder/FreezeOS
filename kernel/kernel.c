@@ -1,3 +1,4 @@
+#include <string.h>
 #include "includes/console.h"
 #include "includes/disk.h"
 #include "includes/fs.h"
@@ -37,7 +38,7 @@ void kernel()
     // puti(file.size);
     // fz_fappend(file, "Bangladesh!");
 
-    // ERROR("kernel.c", "kernel_main", "Reading from file is failed");
+    ERROR("kernel.c", "kernel_main", "Reading from file is failed");
     // WARN("kernel.c", "kernel_main", "Reading from file is failed");
     // INFO("kernel.c", "kernel_main", "Reading from file is failed");
 }
