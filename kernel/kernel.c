@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include "includes/console.h"
 #include "includes/disk.h"
@@ -33,12 +34,24 @@ void kernel()
 
     log_init();
 
-    // DirEntry_t file = find_file("one", "txt");
-    // putns(file.name, 8);
-    // puti(file.size);
-    // fz_fappend(file, "Bangladesh!");
+    // char* t = malloc(1024);
+    // sprintf(t, "File : %s, Function : %s, Message : %s", "Kernel.c", "MAIN", "FAILD to read
+    // file"); puts(t);
 
-    ERROR("kernel.c", "kernel_main", "Reading from file is failed");
+    DirEntry_t file = find_file("errors.txt");
+    putns((char*)file.name, 8);
+    // puti(file.size);
+    fz_fappend(file, "Bangladesh!");
+
+    // char* a = "Hello shohag.txt";
+    // char* b = strtok(a, " ");
+    // puts(a);
+    // puts(strtok(NULL, "."));
+    // puts(strtok(NULL, " "));
+
+    // ERROR("Reading from file is failed");
     // WARN("kernel.c", "kernel_main", "Reading from file is failed");
     // INFO("kernel.c", "kernel_main", "Reading from file is failed");
+
+    // execute_command("cat errors txt hello shohag AHmed!");
 }

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include "../includes/console.h"
 #include "../includes/fs.h"
@@ -51,41 +52,57 @@ void command_ls()
 }
 
 // The command is unkonwn
-void command_unknown(char buffer[])
+void command_unknown(char* buffer)
 {
-    printf("The command %s is unknown.\n", buffer);
+    printf("The command '%s' is unknown.\n", buffer);
 }
 
-void command_touch(char** cmds)
+void command_touch(char* buffer)
 {
+    char* cmds[3];
+    strnsplit(buffer, cmds, " ", 3);
+
     to_uppercase(cmds[1]);
     to_uppercase(cmds[2]);
     fz_create_file(cmds[1], cmds[2]);
     put_nl();
 }
 
-void command_cat(char** cmds)
-{
-    DirEntry_t file = find_file(cmds[1], cmds[2]);
+// void command_cat(char* buffer)
+// {
+//     char* cmds[3];
+//     strnsplit(buffer, cmds, " ", 3);
 
-    fz_fappend(file, cmds[3]);
-    printf("Data append successfull on file : %s . %s\n", cmds[1], cmds[2]);
+//     DirEntry_t file = find_file(cmds[1], cmds[2]);
+
+//     fz_fappend(file, cmds[3]);
+//     printf("Data append successfull on file : %s . %s\n", cmds[1], cmds[2]);
+// }
+
+void command_echo(char* buffer)
+{
+    puts(buffer);
+    put_nl();
 }
 
-void command_sizeof(char** cmds)
+void command_cat(char* buffer)
 {
-    DirEntry_t file = find_file(cmds[1], cmds[2]);
+    char* filename = strtok(buffer, " ");
+
+    DirEntry_t file = find_file(filename);
+    char* data = malloc(file.size);
+    load_file(data, file);
+    putns(data, (size_t)file.size);
+    put_nl();
+    free(data);
+}
+
+void command_sizeof(char* buffer)
+{
+    char* filename = strtok(buffer, " ");
+
+    DirEntry_t file = find_file(filename);
     puts("File name : ");
     putns((char*)file.name, 8);
     printf("File size : %n\n", file.size);
-}
-void command_dump(char** cmds)
-{
-    DirEntry_t file = find_file(cmds[1], cmds[2]);
-    char* buffer = malloc(file.size);
-    load_file(buffer, file);
-    puts("File Contents : ");
-    putns(buffer, file.size);
-    put_nl();
-    free(buffer);
 }

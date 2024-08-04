@@ -1,4 +1,5 @@
 #include "../includes/shell.h"
+#include <stdio.h>
 #include <string.h>
 #include "../includes/console.h"
 #include "../includes/keyboard.h"
@@ -22,6 +23,10 @@ void shell(char c)
 {
     if (c == '\b')
     {
+        // If shell buffer is already empty then return;
+        if (strlen(shell_buffer) == 0)
+            return;
+
         pop(shell_buffer);
         cursor_back(1);
         putchar(' ');
@@ -42,42 +47,57 @@ void shell(char c)
 
 void execute_command(char* buffer)
 {
-    char* commnads[5];
-    strsplit(buffer, commnads, " ");
+    // puts(buffer);
+    // put_nl();
+    char len = strlen(buffer);
+    char* temp = malloc(len);
+    strcpy(temp, buffer);
+    // puts(temp);
+    // puts("------");
 
-    if (strcmp("help", buffer) == 0)
+    char* command = strtok(temp, " ");
+    char* data = strtok(NULL, "");
+
+    // puts(command);
+    // puts("|");
+    // puts(data);
+    // puts("|");
+
+    if (strcmp("help", command) == 0)
     {
         command_help();
     }
-    else if (strcmp("clear", buffer) == 0)
+    else if (strcmp("clear", command) == 0)
     {
         clear_screen();
     }
-    else if (strcmp("ls", buffer) == 0)
+    else if (strcmp("ls", command) == 0)
     {
         command_ls();
     }
-    else if (strcmp("touch", buffer) == 0)
+    else if (strcmp("touch", command) == 0)
     {
-        command_touch(commnads);
+        command_touch(data);
     }
-    else if (strcmp("cat", buffer) == 0)
+    else if (strcmp("echo", command) == 0)
     {
-        command_cat(commnads);
+        command_echo(data);
     }
-    else if (strcmp("sizeof", buffer) == 0)
+    else if (strcmp("cat", command) == 0)
     {
-        command_sizeof(commnads);
+        command_cat(data);
     }
-    else if (strcmp("dump", buffer) == 0)
+    else if (strcmp("sizeof", command) == 0)
     {
-        command_dump(commnads);
+        command_sizeof(data);
     }
     else
     {
-        command_unknown(buffer);
+        // puts(command);
+        command_unknown(command);
     }
 
     // Reset the buffer
-    memset(buffer, '\0', strlen(buffer));
+    free(temp);
+    memset(buffer, 0, len);
 }

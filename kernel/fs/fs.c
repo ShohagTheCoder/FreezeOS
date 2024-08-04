@@ -1,4 +1,5 @@
 #include "../includes/fs.h"
+#include <stdio.h>
 #include <string.h>
 #include "../includes/console.h"
 #include "../includes/disk.h"
@@ -60,17 +61,35 @@ void make_fname(char* dest, const char* src, size_t size)
     strpad(dest, size, ' ');
 }
 
-DirEntry_t find_file(char* name, char* extension)
+void make_fat16_filename(char* filename, char* name, char* ext)
 {
-    char fname[9];
-    char fextension[4];
-    make_fname(fname, name, 8);
-    make_fname(fextension, extension, 3);
+    // To uppercase the name
+    to_uppercase(filename);
+
+    // Allocate memory
+    char* tname = strtok(filename, ".");
+    char* text = strtok(NULL, " ");
+
+    // Copy filename to dest
+    strcpy(name, tname);
+    strcpy(ext, text);
+
+    // Pad with spaceing
+    strpad(name, 8, ' ');
+    strpad(ext, 3, ' ');
+}
+
+DirEntry_t find_file(char* filename)
+{
+    // Filename
+    char name[9];
+    char ext[4];
+    make_fat16_filename(filename, name, ext);
 
     for (int i = 0; i < 256; i++)
     {
-        if (strncmp(fname, (char*)root_entries[i].name, 8) == 0 &&
-            strncmp(fextension, (char*)root_entries[i].extension, 3) == 0)
+        if (strncmp(name, (char*)root_entries[i].name, 8) == 0 &&
+            strncmp(ext, (char*)root_entries[i].extension, 3) == 0)
         {
             return root_entries[i];
         }
@@ -122,10 +141,10 @@ void load_file(char* buffer, DirEntry_t file)
     }
 }
 
-void* file_read(char* name, char* ext)
+void* file_read(char* filename)
 {
     // Find file
-    DirEntry_t file = find_file(name, ext);
+    DirEntry_t file = find_file(filename);
     // Create buffer to hold the file
     void* buffer = malloc((size_t)file.size);
     // Load the file data in buffer
@@ -234,7 +253,7 @@ void fz_fappend(DirEntry_t file, const char* data)
 
     // Read last cluster
     char* buffer = malloc(SECTOR_SIZE * clusters_to_write);
-    clear(buffer, SECTOR_SIZE * clusters_to_write);
+    memset(buffer, 0, SECTOR_SIZE * clusters_to_write);
     if (size > 0)
     {
         load_cluster(buffer, DATA_SECTOR_START + (last_cluster * SECTORS_PER_CLUSTER));

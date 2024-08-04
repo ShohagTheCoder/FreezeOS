@@ -1,8 +1,11 @@
 #include "../includes/logs.h"
+#include <stdio.h>
 #include "../includes/disk.h"
 #include "../includes/fs.h"
 #include "../includes/memory.h"
 #include "../includes/string.h"
+
+#define MAX_BUFFER_SIZE 1024
 
 void log_init()
 {
@@ -11,36 +14,28 @@ void log_init()
     fz_create_file("info", "txt");
 }
 
-void save_log(DirEntry_t file, log_t log)
+void save_log(DirEntry_t file, char* message)
 {
-    // putns(file.name, 8);
-    // puts("\n");
-    // Allocate memory for buffer
-    char* buffer = malloc(MAX_BUFFER_SIZE / 4);
-    sprintf(buffer, "File : %s, Function : %s, Message : %s", log.file, log.function, log.message);
-    // log.message); Save the buffer to the log file puts(buffer);
-    fz_fappend(file, buffer);
-    // Make free the memory
-    free(buffer);
+    // Save the buffer to the log file puts(buffer);
+    fz_fappend(file, message);
 }
 
-void WARN(char* file, char* function, char* message)
+// void WARN(char* file, char* function, char* message)
+// {
+//     log_t log = {.file = file, .function = function, .message = message};
+//     DirEntry_t log_file = find_file("warnings.txt");
+//     save_log(log_file, log);
+// }
+
+void ERROR(char* message)
 {
-    log_t log = {.file = file, .function = function, .message = message};
-    DirEntry_t log_file = find_file("warnings", "txt");
-    save_log(log_file, log);
+    DirEntry_t log_file = find_file("errors.txt");
+    save_log(log_file, message);
 }
 
-void ERROR(char* file, char* function, char* message)
-{
-    log_t log = {.file = file, .function = function, .message = message};
-    DirEntry_t log_file = find_file("errors", "txt");
-    save_log(log_file, log);
-}
-
-void INFO(char* file, char* function, char* message)
-{
-    log_t log = {.file = file, .function = function, .message = message};
-    DirEntry_t log_file = find_file("info", "txt");
-    save_log(log_file, log);
-}
+// void INFO(char* file, char* function, char* message)
+// {
+//     log_t log = {.file = file, .function = function, .message = message};
+//     DirEntry_t log_file = find_file("info.txt");
+//     save_log(log_file, log);
+// }

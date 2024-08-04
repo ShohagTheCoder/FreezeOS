@@ -1,4 +1,5 @@
 #include "../includes/keyboard.h"
+#include <stdio.h>
 #include "../includes/console.h"
 #include "../includes/idt.h"
 #include "../includes/io.h"

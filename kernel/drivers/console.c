@@ -14,8 +14,8 @@
 #define CURSOR_HIGH_BYTE 14
 #define CURSOR_LOW_BYTE 15
 
-int cursor_row = 0;
-int cursor_col = 0;
+static int cursor_row = 0;
+static int cursor_col = 0;
 
 /**
  * Move cursor function

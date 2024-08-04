@@ -13,8 +13,8 @@ typedef struct
 
 void log_init();
 
-void ERROR(char* file, char* function, char* message);
-void WARN(char* file, char* function, char* message);
-void INFO(char* file, char* function, char* message);
+void ERROR(char* message);
+// void WARN(char* file, char* function, char* message);
+// void INFO(char* file, char* function, char* message);
 
 #endif

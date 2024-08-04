@@ -31,12 +31,12 @@ typedef struct
 
 void load_fat();
 void load_root_entries();
-DirEntry_t find_file(char* name, char* extension);
+DirEntry_t find_file(char* filename);
 
 void load_file(char* buffer, DirEntry_t file);
 int get_next_cluster_number(int current_cluster);
 
-void* file_read(char* name, char* ext);
+void* file_read(char* filename);
 
 void fz_create_file(char name[], char extension[]);
 

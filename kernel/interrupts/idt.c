@@ -1,4 +1,6 @@
 #include "../includes/idt.h"
+#include <stddef.h>
+#include <stdint.h>
 #include "../includes/io.h"
 
 // Constants

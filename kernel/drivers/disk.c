@@ -1,4 +1,5 @@
 #include "../includes/disk.h"
+#include <stdio.h>
 #include "../includes/io.h"
 #include "../includes/string.h"
 
