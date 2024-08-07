@@ -9,6 +9,6 @@ print_string:
     int 0x10
     jmp .print_loop
 
-.print_done
+.print_done:
     ret
     

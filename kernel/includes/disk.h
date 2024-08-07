@@ -1,7 +1,7 @@
 #ifndef DISK_H
 #define DISK_H
 
-#include "types.h"
+#include <stdint.h>
 
 void ata_wait_busy();
 void ata_wait_drq();

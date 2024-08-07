@@ -13,14 +13,14 @@ LOADER_BIN	 		:= $(BUILD_KERNEL_DIR)/loader.bin
 KERNEL_BIN	 		:= $(BUILD_KERNEL_DIR)/kernel.bin
 KERNEL_ENTRY_ASM	:= arch/x86/kernel_entry.asm
 KERNEL_ENTRY_OBJ	:= $(BUILD_KERNEL_DIR)/kernel_entry.o
-SLIBC				:= libs/libs.a
+SLIBC				:= libs/slibc/libs.a
 
 # Configurations
 LD_FILE				:= ../configs/kernel/linker.ld
 LOADER_LD_FILE		:= ../configs/kernel/loader.ld
 
 # Flags
-CFLAGS				:= -I./libs/include -ffreestanding -nostdlib -m32 -g -Wall -Wextra
+CFLAGS				:= -I./libs/slibc/include -ffreestanding -nostdlib -m32 -g -Wall -Wextra
 
 # Rules
 .PHONY: all

@@ -1,5 +1,5 @@
 kernel.c
-libs/logs.c
+log/logs.c
 interrupts/idt.c
 drivers/keyboard.c
 drivers/console.c

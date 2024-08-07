@@ -1,8 +1,8 @@
 #ifndef LOGS_H
 #define LOGS_H
 
+#include <stdint.h>
 #include "fs.h"
-#include "types.h"
 
 typedef struct
 {

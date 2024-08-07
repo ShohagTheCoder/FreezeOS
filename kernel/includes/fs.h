@@ -1,8 +1,8 @@
+
 #ifndef FS_H
 #define FS_H
 
-#include "types.h"
-
+#include <stdint.h>
 typedef uint16_t ClusterChain_t;
 
 typedef struct

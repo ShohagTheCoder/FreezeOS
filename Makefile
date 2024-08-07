@@ -32,7 +32,7 @@ kernel:
 
 # Make slibc library
 lib:
-	$(MAKE) -C kernel/libs
+	$(MAKE) -C kernel/libs/slibc
 
 run : 
 	qemu-system-i386 -drive format=raw,file=$(ISO_FILE)
