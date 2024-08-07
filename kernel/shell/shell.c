@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../includes/console.h"
+#include "../includes/fs.h"
 #include "../includes/keyboard.h"
 #include "../includes/memory.h"
 #include "../includes/string.h"
@@ -14,7 +15,7 @@ void shell_init()
     keyboard_bind(&shell);
     clear_screen();
     hr();
-    puts("Welcome to FreezeOS v1.0.3");
+    puts("Welcome to FreezeOS made by Shohag Ahmed.");
     hr();
     puts("> ");
 }
@@ -47,21 +48,10 @@ void shell(char c)
 
 void execute_command(char* buffer)
 {
-    // puts(buffer);
-    // put_nl();
     char len = strlen(buffer);
-    char* temp = malloc(len);
-    strcpy(temp, buffer);
-    // puts(temp);
-    // puts("------");
-
-    char* command = strtok(temp, " ");
-    char* data = strtok(NULL, "");
-
-    // puts(command);
-    // puts("|");
-    // puts(data);
-    // puts("|");
+    char* command = strtok(buffer, " ");
+    char* data = strtok(NULL, ">");
+    char* filename = strtok(NULL, "");
 
     if (strcmp("help", command) == 0)
     {
@@ -91,13 +81,34 @@ void execute_command(char* buffer)
     {
         command_sizeof(data);
     }
+    else if (len == 0)
+    {
+        command_empty();
+    }
     else
     {
         // puts(command);
         command_unknown(command);
     }
 
-    // Reset the buffer
-    free(temp);
-    memset(buffer, 0, len);
+    // Append data on file
+    if (filename != NULL)
+    {
+        // putns(file.name, 8);
+        if (*filename == '>')
+        {
+            filename += 2;
+            DirEntry_t file = find_file(filename);
+            fz_fappend(file, data);
+        }
+        else
+        {
+            ++filename;
+            DirEntry_t file = find_file(filename);
+            fz_fwrite(file, data);
+        }
+    }
+
+    // Clear the mem
+    memset(shell_buffer, 0, len);
 }

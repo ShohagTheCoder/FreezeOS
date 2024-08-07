@@ -2,18 +2,19 @@
 
 char* strpbrk(const char* str, const char* accept)
 {
-    while (*str)
+    const char* s;
+    const char* a;
+
+    for (s = str; *s; ++s)
     {
-        const char* a = accept;
-        while (*a)
+        for (a = accept; *a; ++a)
         {
-            if (*a == *str)
+            if (*s == *a)
             {
-                return (char*)str;
+                return (char*)s;
             }
-            a++;
         }
-        str++;
     }
+
     return NULL;
 }

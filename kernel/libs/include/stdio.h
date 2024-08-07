@@ -13,6 +13,7 @@ void memset(char* ptr, char c, int count);
 void puts(const char* str);
 void putns(const char* str, size_t n);
 void puti(int n);
+void d(char* title, char* data);
 
 void printf(const char* format, ...);
 void sprintf(char* buffer, const char* format, ...);

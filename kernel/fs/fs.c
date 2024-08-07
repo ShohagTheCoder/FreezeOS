@@ -153,12 +153,12 @@ void* file_read(char* filename)
     return buffer;
 }
 
-void fz_create_file(char name[], char extension[])
+void fz_create_file(char* filename)
 {
-    char fname[9];
-    char fextension[4];
-    make_fname(fname, name, 8);
-    make_fname(fextension, extension, 3);
+    // Filename
+    char name[9];
+    char ext[4];
+    make_fat16_filename(filename, name, ext);
 
     int index = 0;
     // Find empty file entry
@@ -197,8 +197,8 @@ void fz_create_file(char name[], char extension[])
     fat[cluster_position] = 0xFFFF;
 
     // Copy contents
-    strncpy((char*)root_entries[index].name, fname, 8);
-    strncpy((char*)root_entries[index].extension, fextension, 3);
+    strncpy((char*)root_entries[index].name, name, 8);
+    strncpy((char*)root_entries[index].extension, ext, 3);
 
     // Write with new entry data
     fz_write_sector((char*)fat, fat_start);
@@ -219,6 +219,54 @@ int get_file_index_in_root_directories(DirEntry_t file)
     }
 
     return index;
+}
+
+void fz_fwrite(DirEntry_t file, const char* data)
+{
+    // Variables
+    int length = strlen(data);
+    // int size = (int)file.size;
+    int clusters_to_write = 0;
+    ClusterChain_t first_cluster = file.first_cluster_low;
+    // ClusterChain_t last_cluster = first_cluster;
+    // ClusterChain_t end_cluster = 0;
+
+    // Last cluster
+    // int rem = size % CLUSTER_SIZE;
+    // int offset = rem;
+
+    int rem = length;
+    while (rem >= CLUSTER_SIZE)
+    {
+        clusters_to_write++;
+        rem -= CLUSTER_SIZE;
+    }
+
+    if (rem > 0)
+        clusters_to_write += 1;
+
+    // Write back last cluster with new data
+    write_cluster((char*)data, DATA_SECTOR_START + (first_cluster * SECTORS_PER_CLUSTER));
+
+    int file_index = get_file_index_in_root_directories(file);
+    // Update file and cluster chain
+    root_entries[file_index].size = length;
+
+    // Write with new entry data
+    // fz_write_sector((char*)fat, fat_start);
+    fz_write_sector((char*)root_entries, root_entries_start);
+
+    // end_cluster = fat[last_cluster];
+    // fat[last_cluster] = 0xFFFF;
+
+    // while (end_cluster != END_OF_CLUSTER)
+    // {
+    //     fat[end_cluster] = 0;
+    //     last_cluster = end_cluster;
+    //     end_cluster = fat[last_cluster];
+    // }
+
+    // fat[end_cluster] = 0;
 }
 
 void fz_fappend(DirEntry_t file, const char* data)

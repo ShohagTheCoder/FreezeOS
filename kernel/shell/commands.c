@@ -55,29 +55,21 @@ void command_ls()
 void command_unknown(char* buffer)
 {
     printf("The command '%s' is unknown.\n", buffer);
+    // puts("The command '");
+    // puts(buffer);
+    // puts("' is unknown.\n");
+}
+
+void command_empty()
+{
+    puts("Empty command is not valid!\n");
 }
 
 void command_touch(char* buffer)
 {
-    char* cmds[3];
-    strnsplit(buffer, cmds, " ", 3);
-
-    to_uppercase(cmds[1]);
-    to_uppercase(cmds[2]);
-    fz_create_file(cmds[1], cmds[2]);
-    put_nl();
+    fz_create_file(buffer);
+    puts("File created succesfully.\n");
 }
-
-// void command_cat(char* buffer)
-// {
-//     char* cmds[3];
-//     strnsplit(buffer, cmds, " ", 3);
-
-//     DirEntry_t file = find_file(cmds[1], cmds[2]);
-
-//     fz_fappend(file, cmds[3]);
-//     printf("Data append successfull on file : %s . %s\n", cmds[1], cmds[2]);
-// }
 
 void command_echo(char* buffer)
 {
@@ -104,5 +96,5 @@ void command_sizeof(char* buffer)
     DirEntry_t file = find_file(filename);
     puts("File name : ");
     putns((char*)file.name, 8);
-    printf("File size : %n\n", file.size);
+    printf("File size : %d byte.\n", file.size);
 }

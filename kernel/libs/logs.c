@@ -9,9 +9,9 @@
 
 void log_init()
 {
-    fz_create_file("errors", "txt");
-    fz_create_file("warnings", "txt");
-    fz_create_file("info", "txt");
+    fz_create_file("errors.txt");
+    fz_create_file("warnings.txt");
+    fz_create_file("info.txt");
 }
 
 void save_log(DirEntry_t file, char* message)

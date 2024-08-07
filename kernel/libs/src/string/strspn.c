@@ -1,21 +1,27 @@
 #include <stddef.h>
 
-size_t strspn(const char* str, char* accept)
+size_t strspn(const char* str, const char* accept)
 {
-    const char* p;
+    const char* s;
     const char* a;
     size_t count = 0;
 
-    for (p = str; *p != '\0'; p++)
+    for (s = str; *s; ++s)
     {
-        for (a = accept; *a != '\0'; a++)
+        for (a = accept; *a; ++a)
         {
-            if (*a == *p)
+            if (*s == *a)
             {
-                count++;
                 break;
             }
         }
+
+        if (*a == '\0')
+        {
+            return count;
+        }
+
+        ++count;
     }
 
     return count;

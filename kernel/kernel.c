@@ -39,9 +39,16 @@ void kernel()
     // file"); puts(t);
 
     DirEntry_t file = find_file("errors.txt");
-    putns((char*)file.name, 8);
+    // putns((char*)file.name, 8);
     // puti(file.size);
     fz_fappend(file, "Bangladesh!");
+
+    // char* a = ">.>Hwllo world .>> go to bed";
+    // char* b = ">.>";
+
+    // a += strspn(a, b);
+
+    // puts(a);
 
     // char* a = "Hello shohag.txt";
     // char* b = strtok(a, " ");
@@ -53,5 +60,7 @@ void kernel()
     // WARN("kernel.c", "kernel_main", "Reading from file is failed");
     // INFO("kernel.c", "kernel_main", "Reading from file is failed");
 
-    // execute_command("cat errors txt hello shohag AHmed!");
+    // execute_command("echo gooogle");
+    // execute_command("echo gooogle > errors.txt");
+    // printf("Hi this is %s. I'm %d years old", "Shohag Ahmed", 20);
 }

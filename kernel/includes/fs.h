@@ -33,13 +33,15 @@ void load_fat();
 void load_root_entries();
 DirEntry_t find_file(char* filename);
 
+void make_fat16_filename(char* filename, char* name, char* ext);
 void load_file(char* buffer, DirEntry_t file);
 int get_next_cluster_number(int current_cluster);
 
 void* file_read(char* filename);
 
-void fz_create_file(char name[], char extension[]);
+void fz_create_file(char* filename);
 
+void fz_fwrite(DirEntry_t file, const char* data);
 void fz_fappend(DirEntry_t file, const char* data);
 void fz_fdelete(DirEntry_t file);
 

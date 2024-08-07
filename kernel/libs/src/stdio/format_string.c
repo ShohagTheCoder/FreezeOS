@@ -20,9 +20,16 @@ char* format_string(const char* format, va_list args)
             p++;  // Move to the format specifier
             switch (*p)
             {
+                int i;
+                char buffer[20];
+
                 case 'd':
-                    int i = va_args(args, int);
-                    char buffer[20];
+                    i = va_args(args, int);
+                    itoa(i, buffer, 10);  // Convert integer into string
+                    strcat(str, buffer);
+                    break;
+                case 'n':
+                    i = va_args(args, int);
                     itoa(i, buffer, 10);  // Convert integer into string
                     strcat(str, buffer);
                     break;

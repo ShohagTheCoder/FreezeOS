@@ -4,9 +4,6 @@
 
 char* strtok(char* str, const char* delim)
 {
-    // puts("STRTOK STR : ");
-    // puts(delim);
-    // puts(" | ");
     static char* last;
     if (str == NULL)
     {
@@ -17,6 +14,14 @@ char* strtok(char* str, const char* delim)
     {
         return NULL;
     }
+
+    // Skip leading delimiters
+    // str += strspn(str, delim);
+    // if (*str == '\0')
+    // {
+    //     last = NULL;
+    //     return NULL;
+    // }
 
     char* token = str;
     str = strpbrk(str, delim);
