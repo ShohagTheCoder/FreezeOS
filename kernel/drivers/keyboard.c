@@ -98,7 +98,7 @@ void keyboard_bind(keyboardCallback callback)
 char get_char_from_scancode(uint8_t scancode)
 {
     if (scancode >= 128)
-        return;
+        return 0;
 
     if ((shiftPressed && !capsLockOn) || (!shiftPressed && capsLockOn))
     {
