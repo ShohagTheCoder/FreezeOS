@@ -1,5 +1,6 @@
 #include <console.h>
 #include <fs.h>
+#include <graphics.h>
 #include <keyboard.h>
 #include <memory.h>
 #include <shell.h>
@@ -13,9 +14,7 @@ void shell_init()
     // Clear the screen and print welcome
     keyboard_bind(&shell);
     clear_screen();
-    hr();
-    puts("Welcome to FreezeOS made by Shohag Ahmed.");
-    hr();
+    display_header();
     puts("> ");
 }
 
@@ -59,6 +58,7 @@ void execute_command(char* buffer)
     else if (strcmp("clear", command) == 0)
     {
         clear_screen();
+        display_header();
     }
     else if (strcmp("ls", command) == 0)
     {

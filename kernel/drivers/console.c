@@ -17,12 +17,14 @@
 
 static int cursor_row = 0;
 static int cursor_col = 0;
+static int saved_cursor_row = 0;
+static int saved_cursor_col = 0;
 
 /**
  * Move cursor function
  */
 
-void move_cursor()
+void update_cursor()
 {
     // Valid cursor positoin
     if (cursor_row > VGA_HEIGHT || cursor_col > VGA_WIDTH)
@@ -42,10 +44,31 @@ void move_cursor()
     outb(VGA_DATA_PORT, position & 0xFF);
 }
 
+int save_cursor()
+{
+    saved_cursor_row = cursor_row;
+    saved_cursor_col = cursor_col;
+    return ((cursor_row * VGA_WIDTH) + cursor_col);
+}
+
+void reset_cursor_on_saved()
+{
+    cursor_row = saved_cursor_row;
+    cursor_col = saved_cursor_col;
+    update_cursor();
+}
+
+void set_cursor(int c_row, int c_col)
+{
+    cursor_row = c_row;
+    cursor_col = c_col;
+    update_cursor();
+}
+
 void cursor_back(int count)
 {
     cursor_col -= count;
-    move_cursor();
+    update_cursor();
 }
 
 /**
@@ -74,7 +97,7 @@ void putchar(char c)
     }
 
     // Move the cursot to next position
-    move_cursor();
+    update_cursor();
 }
 
 void put_nl()
@@ -89,7 +112,7 @@ void hr()
     {
         cursor_col = 0;
         cursor_row += 1;
-        move_cursor();
+        update_cursor();
     }
 
     // Print the hr
@@ -114,5 +137,5 @@ void clear_screen()
 
     cursor_col = 0;
     cursor_row = 0;
-    move_cursor();
+    update_cursor();
 }

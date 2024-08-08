@@ -8,6 +8,7 @@
 #include <shell.h>
 #include <stdio.h>
 #include <string.h>
+#include <timer.h>
 
 /**
  * @brief this kernel function is the heart of FreezeOS
@@ -20,16 +21,17 @@ void kernel()
     load_root_entries();
     load_fat();
 
-    // Initialize interrupts
-    idt_init();
-    mask_all_irqs();
-    keyboard_init();
-    asm volatile("sti");
-
     // Initialize shell
     shell_init();
 
     log_init();
+
+    // Initialize interrupts
+    idt_init();
+    mask_all_irqs();
+    timer_init();
+    keyboard_init();
+    asm volatile("sti");
 
     // char* t = malloc(1024);
     // sprintf(t, "File : %s, Function : %s, Message : %s", "Kernel.c", "MAIN", "FAILD to read

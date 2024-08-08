@@ -16,6 +16,7 @@ idt_gate_t idt[IDT_SIZE];
 idt_register_t idt_r;
 
 // External funcitons
+extern void isr1_handler();
 extern void irq1_handler();
 
 void mask_all_irqs()
@@ -90,6 +91,7 @@ void pic_remap()
 
 void set_idt_gates()
 {
+    set_idt_gate(32, (uint32_t)isr1_handler);
     set_idt_gate(33, (uint32_t)irq1_handler);
 }
 

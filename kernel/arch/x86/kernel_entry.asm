@@ -4,6 +4,7 @@
 section .text
 ; Extern functions
 extern kernel
+extern timer_handler
 extern keyboard_handler
 
 ; Kernel entry point
@@ -18,6 +19,21 @@ kernel_entry:
     call kernel         ; Call the kernel
 
     jmp $
+
+; isr1 handler
+global isr1_handler
+isr1_handler:
+    cli
+    pushad
+
+    call timer_handler ; Call keyboard handler to hangle the interrupt
+
+    mov al, 0x20    ; End of enterrupt (EOI) command code
+    out 0x20, al    ; Send to master pic
+
+    popad
+    sti
+    iretd
 
 ; irq1 handler
 global irq1_handler
