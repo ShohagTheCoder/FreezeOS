@@ -2,7 +2,7 @@
 BUILD_KERNEL_DIR	:= ../build/kernel
 BUILD_BOOT_DIR		:= ../build/boot
 BOOT_OBJ			:= $(BUILD_BOOT_DIR)/boot.o
-KERNEL_C_FILES		:= $(shell cat kernels)
+KERNEL_C_FILES		:= $(wildcard *.c) $(wildcard */*.c)
 KERNEL_OBJ_FILES	:= $(patsubst %.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
 KERNEL_ELF	 		:= $(BUILD_KERNEL_DIR)/kernel.elf
 DEBUG_ELF	 		:= $(BUILD_KERNEL_DIR)/debug.elf
