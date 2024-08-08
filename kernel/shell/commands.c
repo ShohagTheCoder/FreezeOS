@@ -1,10 +1,9 @@
+#include <console.h>
+#include <fs.h>
+#include <memory.h>
+#include <shell.h>
 #include <stdio.h>
 #include <string.h>
-#include "../includes/console.h"
-#include "../includes/fs.h"
-#include "../includes/memory.h"
-#include "../includes/shell.h"
-#include "../includes/string.h"
 
 #define KiB 1042
 

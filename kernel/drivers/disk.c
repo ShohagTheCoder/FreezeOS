@@ -1,7 +1,7 @@
-#include "../includes/disk.h"
+#include <disk.h>
+#include <io.h>
 #include <stdio.h>
-#include "../includes/io.h"
-#include "../includes/string.h"
+#include <string.h>
 
 // Constants
 #define ATA_PRIMARY_IO 0x1F0

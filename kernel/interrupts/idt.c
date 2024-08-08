@@ -1,7 +1,7 @@
-#include "../includes/idt.h"
+#include <idt.h>
+#include <io.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "../includes/io.h"
 
 // Constants
 #define CODE_SEG 0x08

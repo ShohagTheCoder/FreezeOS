@@ -1,12 +1,10 @@
-#include "../includes/fs.h"
+#include <console.h>
+#include <disk.h>
+#include <fs.h>
+#include <io.h>
+#include <memory.h>
 #include <stdio.h>
 #include <string.h>
-#include "../includes/console.h"
-#include "../includes/disk.h"
-#include "../includes/io.h"
-#include "../includes/memory.h"
-#include "../includes/stdio.h"
-#include "../includes/string.h"
 
 // Constants
 #define SECTOR_SIZE 512

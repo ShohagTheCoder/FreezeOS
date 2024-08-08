@@ -1,1 +1,1 @@
-#include "../includes/graphics.h"
+#include <graphics.h>

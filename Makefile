@@ -1,4 +1,5 @@
 # Variables
+export PROJECT_ROOT	:= $(realpath .)
 BUILD_DIR			:= build
 ISO_DIR				:= $(BUILD_DIR)/iso
 ISO_FILE			:= $(ISO_DIR)/freeze.img

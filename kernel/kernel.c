@@ -1,16 +1,13 @@
+#include <console.h>
+#include <disk.h>
+#include <fs.h>
+#include <idt.h>
+#include <keyboard.h>
+#include <logs.h>
+#include <memory.h>
+#include <shell.h>
 #include <stdio.h>
 #include <string.h>
-#include "includes/console.h"
-#include "includes/disk.h"
-#include "includes/fs.h"
-#include "includes/idt.h"
-#include "includes/keyboard.h"
-#include "includes/logs.h"
-#include "includes/memory.h"
-#include "includes/shell.h"
-#include "includes/string.h"
-
-#define SECTOR_SIZE 512
 
 /**
  * @brief this kernel function is the heart of FreezeOS

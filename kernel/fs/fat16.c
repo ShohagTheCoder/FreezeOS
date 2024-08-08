@@ -1,4 +1,3 @@
-#include "../includes/stdio.h"
 
 // // Syscall : Open file
 // int open_file(char* filename, FileMode mode)

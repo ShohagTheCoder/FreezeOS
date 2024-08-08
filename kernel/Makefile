@@ -1,6 +1,6 @@
 # Variables
-BUILD_KERNEL_DIR	:= ../build/kernel
-BUILD_BOOT_DIR		:= ../build/boot
+BUILD_KERNEL_DIR	:= $(PROJECT_ROOT)/build/kernel
+BUILD_BOOT_DIR		:= $(PROJECT_ROOT)/build/boot
 BOOT_OBJ			:= $(BUILD_BOOT_DIR)/boot.o
 KERNEL_C_FILES		:= $(wildcard *.c) $(wildcard */*.c)
 KERNEL_OBJ_FILES	:= $(patsubst %.c, $(BUILD_KERNEL_DIR)/%.o, $(KERNEL_C_FILES))
@@ -16,11 +16,11 @@ KERNEL_ENTRY_OBJ	:= $(BUILD_KERNEL_DIR)/kernel_entry.o
 SLIBC				:= libs/slibc/libs.a
 
 # Configurations
-LD_FILE				:= ../configs/kernel/linker.ld
-LOADER_LD_FILE		:= ../configs/kernel/loader.ld
+LD_FILE				:= $(PROJECT_ROOT)/configs/kernel/linker.ld
+LOADER_LD_FILE		:= $(PROJECT_ROOT)/configs/kernel/loader.ld
 
 # Flags
-CFLAGS				:= -I./libs/slibc/include -ffreestanding -nostdlib -m32 -g -Wall -Wextra
+CFLAGS				:= -Iinclude -Ilibs/slibc/include -ffreestanding -nostdlib -m32 -g -Wall -Wextra
 
 # Rules
 .PHONY: all

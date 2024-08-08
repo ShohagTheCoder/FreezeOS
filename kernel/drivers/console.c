@@ -1,8 +1,8 @@
-#include "../includes/console.h"
+#include <console.h>
+#include <io.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "../includes/io.h"
-#include "../includes/string.h"
+#include <string.h>
 
 // Define fixed-width integer types if stdint.h is not available
 #define VGA_MEMORY_ADDRESS 0xb8000

@@ -4,7 +4,7 @@ OBJ			= $(patsubst src/%.c, build/%.o, $(SRC))
 LIB			= libs.a
 
 # Flags
-CFLAGS		= -Iinclude -Wall -Wextra -ffreestanding -nostdlib -m32
+CFLAGS		= -Iinclude -I$(PROJECT_ROOT)/kernel/include -Wall -Wextra -ffreestanding -nostdlib -m32
 LDFLAGS 	= -shared
 
 # Rules

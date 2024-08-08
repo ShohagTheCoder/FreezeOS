@@ -1,11 +1,11 @@
-#include "../includes/keyboard.h"
+#include <console.h>
+#include <idt.h>
+#include <io.h>
+#include <keyboard.h>
+#include <shell.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "../includes/console.h"
-#include "../includes/idt.h"
-#include "../includes/io.h"
-#include "../includes/shell.h"
-#include "../includes/string.h"
+#include <string.h>
 
 #define KEYBOARD_DATA_PORT 0x60
 #define KEYBOARD_STATUS_PORT 0x64

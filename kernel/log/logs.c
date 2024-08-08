@@ -1,9 +1,9 @@
-#include "../includes/logs.h"
+#include <disk.h>
+#include <fs.h>
+#include <logs.h>
+#include <memory.h>
 #include <stdio.h>
-#include "../includes/disk.h"
-#include "../includes/fs.h"
-#include "../includes/memory.h"
-#include "../includes/string.h"
+#include <string.h>
 
 #define MAX_BUFFER_SIZE 1024
 

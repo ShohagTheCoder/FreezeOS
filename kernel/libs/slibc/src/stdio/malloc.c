@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stdint.h>
-#include "../../../includes/string.h"
 #include "dynamic_mem.h"
 
 // Dynamically allocate memory space
